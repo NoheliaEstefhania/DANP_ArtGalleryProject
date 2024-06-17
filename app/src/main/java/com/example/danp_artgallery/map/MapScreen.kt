@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.screens
+package com.example.danp_artgallery.map
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text

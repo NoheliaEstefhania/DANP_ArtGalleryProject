@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.screens.home
+package com.example.danp_artgallery.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

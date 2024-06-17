@@ -15,10 +15,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import com.example.danp_artgallery.screens.home.HomeScreen
-import com.example.danp_artgallery.screens.SearchScreen
-import com.example.danp_artgallery.screens.MapScreen
-import com.example.danp_artgallery.screens.InfoScreen
+import com.example.danp_artgallery.home.HomeScreen
+import com.example.danp_artgallery.search.SearchScreen
+import com.example.danp_artgallery.map.MapScreen
+import com.example.danp_artgallery.info.InfoScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()

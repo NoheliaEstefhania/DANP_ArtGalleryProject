@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.screens
+package com.example.danp_artgallery.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
