@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 
 //personalized colors
 
-val primaryLight = Color(0xFF8A4A65)
+val primaryLight = Color(0x771D4B)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFD9E5)
 val onPrimaryContainerLight = Color(0xFF390721)
