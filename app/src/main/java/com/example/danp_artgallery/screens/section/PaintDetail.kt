@@ -62,7 +62,7 @@ fun PaintsDetailFunction(paint: Paint) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = paint.title,
-                    style = typography.titleSmall.copy(color = Color.Red),
+                    style = typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
