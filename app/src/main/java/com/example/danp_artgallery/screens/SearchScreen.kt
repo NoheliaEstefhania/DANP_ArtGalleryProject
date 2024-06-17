@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Scaffold
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,12 +23,19 @@ import androidx.compose.ui.unit.dp
 fun SearchScreen(){
     Scaffold(
         topBar = {
-            Image(
-                painter = painterResource(id = R.drawable.logo), // Reemplaza 'your_image_resource' con el ID de tu imagen
-                contentDescription = "logo",
+            Box(
                 modifier = Modifier
-                    .size(50.dp)
-            )
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp), // Ajusta el padding según sea necesario
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo), // Reemplaza 'logo' con el ID de tu imagen
+                    contentDescription = "logo",
+                    modifier = Modifier
+                        .size(50.dp)
+                )
+            }
         },
         content = { paddingValues ->
             Box(
