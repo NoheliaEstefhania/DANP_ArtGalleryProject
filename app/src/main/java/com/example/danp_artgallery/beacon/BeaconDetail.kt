@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
+import com.example.danp_artgallery.R
+import com.example.danp_artgallery.screens.section.Exposition
+import com.example.danp_artgallery.screens.section.ExpositionsDetailFunction
 
 data class Beacon(
     val userId: String,
@@ -49,9 +51,9 @@ fun BeaconsDetailFunction(beacon: Beacon) {
 }
 
 @Composable
-fun BeaconList(expositionList: List<Beacon>) {
+fun BeaconList(beaconList: List<Beacon>) {
     LazyColumn {
-        items(expositionList) { item ->
+        items(beaconList) { item ->
             BeaconsDetailFunction(beacon = item)
         }
     }
