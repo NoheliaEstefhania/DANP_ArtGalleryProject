@@ -79,10 +79,13 @@ fun BeaconScreen(){
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),  // Esto agrega padding para evitar que el contenido se solape con la topBar.
-                contentAlignment = Alignment.Center
+                    .padding(horizontal = 16.dp) // Puedes ajustar el padding aquí si prefieres que sea menor
+                    .padding(top = paddingValues.calculateTopPadding()),  // Mantiene solo el padding superior necesario para evitar solapamiento                contentAlignment = Alignment.Center
             ) {
-                Text("poner aqui el cuadro de google maps")
+
+                Column {
+                    BeaconList(beaconList = beaconList)
+                }
             }
         }
     )
