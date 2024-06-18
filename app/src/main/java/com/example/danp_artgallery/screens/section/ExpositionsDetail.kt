@@ -21,14 +21,14 @@ import com.example.danp_artgallery.model.Exposition
 
 
 @Composable
-fun ExpositionsDetailFunction(exposition: Exposition, navigateToProfile: (Exposition)-> Unit) {
+fun ExpositionsDetailFunction(exposition: Exposition, navigateToPaintDetail: (Exposition)-> Unit) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp).clickable { navigateToProfile(exposition) }
+            modifier = Modifier.padding(16.dp).clickable { navigateToPaintDetail(exposition) }
         ) {
             val imageModifier = Modifier
                 .height(150.dp)
@@ -54,10 +54,10 @@ fun ExpositionsDetailFunction(exposition: Exposition, navigateToProfile: (Exposi
 }
 
 @Composable
-fun ExpositionList(expositionList: List<Exposition>, navigateToProfile: (Exposition) -> Unit) {
+fun ExpositionList(expositionList: List<Exposition>, navigateToPaintDetail: (Exposition) -> Unit) {
     LazyColumn {
         items(expositionList) { item ->
-            ExpositionsDetailFunction(exposition = item, navigateToProfile = navigateToProfile)
+            ExpositionsDetailFunction(exposition = item, navigateToPaintDetail = navigateToPaintDetail)
         }
     }
 }
@@ -67,6 +67,6 @@ fun ExpositionList(expositionList: List<Exposition>, navigateToProfile: (Exposit
 fun ExpositionPreview() {
     ExpositionsDetailFunction(
         exposition = DataProvider.expositionList[0],
-        navigateToProfile = {}
+        navigateToPaintDetail = {}
     )
 }

@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.danp_artgallery.navigation.AppNavigation
-import com.example.danp_artgallery.screens.section.Exposition
+import com.example.danp_artgallery.model.Exposition
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 class MainActivity : ComponentActivity() {

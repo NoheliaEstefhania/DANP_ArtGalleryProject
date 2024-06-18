@@ -13,12 +13,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.danp_artgallery.R
-import com.example.danp_artgallery.screens.section.DataProvider.expositionList
-import com.example.danp_artgallery.screens.section.Exposition
+import com.example.danp_artgallery.model.DataProvider.expositionList
+import com.example.danp_artgallery.model.Exposition
 import com.example.danp_artgallery.screens.section.ExpositionList
 
 @Composable
-fun HomeScreen(navigateToProfile: (Exposition) -> Unit){
+fun HomeScreen(navigateToPaintDetail: (Exposition) -> Unit){
     Scaffold(
         topBar = {
             Box(
@@ -47,7 +47,7 @@ fun HomeScreen(navigateToProfile: (Exposition) -> Unit){
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    ExpositionList(expositionList = expositionList, navigateToProfile = navigateToProfile)
+                    ExpositionList(expositionList = expositionList, navigateToPaintDetail = navigateToPaintDetail)
                 }
             }
         }

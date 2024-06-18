@@ -64,7 +64,12 @@ fun AppNavigation() {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screens.HomeScreen.name) {
-                HomeScreen()
+                HomeScreen(
+                    navigateToPaintDetail = { paint ->
+
+                        //navController.navigate("${screens.section.PaintDetail}/${paint.title}")
+                    }
+                )
             }
 
             composable(route = Screens.SearchScreen.name) {

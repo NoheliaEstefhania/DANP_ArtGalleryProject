@@ -1,7 +1,6 @@
 package com.example.danp_artgallery.model
 
 import com.example.danp_artgallery.R
-import com.example.danp_artgallery.screens.section.Exposition
 
 object DataProvider {
 
