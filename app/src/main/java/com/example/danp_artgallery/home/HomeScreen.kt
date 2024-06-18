@@ -18,7 +18,7 @@ import com.example.danp_artgallery.model.Exposition
 import com.example.danp_artgallery.screens.section.ExpositionList
 
 @Composable
-fun HomeScreen(navigateToPaintDetail: (Exposition) -> Unit){
+fun HomeScreen(navigateToExpositionDetail: (Exposition) -> Unit){
     Scaffold(
         topBar = {
             Box(
@@ -47,7 +47,7 @@ fun HomeScreen(navigateToPaintDetail: (Exposition) -> Unit){
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    ExpositionList(expositionList = expositionList, navigateToPaintDetail = navigateToPaintDetail)
+                    ExpositionList(expositionList = expositionList, navigateToExpositionDetail = navigateToExpositionDetail)
                 }
             }
         }

@@ -19,6 +19,8 @@ import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
+import com.example.danp_artgallery.model.DataProvider
+import com.example.danp_artgallery.screens.section.ExpositionActivity
 
 @Composable
 fun AppNavigation() {
@@ -65,11 +67,11 @@ fun AppNavigation() {
         ) {
             composable(route = Screens.HomeScreen.name) {
                 HomeScreen(
-                    navigateToPaintDetail = { paint ->
-
-                        //navController.navigate("${screens.section.PaintDetail}/${paint.title}")
+                    navigateToExpositionDetail = { paint ->
+                        navController.navigate("${Screens.ExpositionDetailClass.ExpositionDetail.name}/${paint.title}")
                     }
                 )
+
             }
 
             composable(route = Screens.SearchScreen.name) {
@@ -83,6 +85,11 @@ fun AppNavigation() {
 
             composable(route = Screens.InfoScreen.name) {
                 InfoScreen()
+            }
+
+            composable(route = "${Screens.ExpositionDetailClass.ExpositionDetail::class.java.simpleName}/{expositionTitle}") { backStackEntry ->
+                val expositionTitle = backStackEntry.arguments?.getString("expositionTitle")
+                // Lógica para mostrar el detalle de la exposición basado en expositionTitle
             }
         }
     }
