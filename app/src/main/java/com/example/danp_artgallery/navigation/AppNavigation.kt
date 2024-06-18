@@ -17,8 +17,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
-import com.example.danp_artgallery.map.MapScreen
 import com.example.danp_artgallery.info.InfoScreen
+import com.example.danp_artgallery.map.CityMapScreen
+
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -72,7 +73,7 @@ fun AppNavigation() {
 
 
             composable(route = Screens.MapScreen.name) {
-                MapScreen()
+                CityMapScreen()
             }
 
             composable(route = Screens.InfoScreen.name) {
