@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.danp_artgallery.navigation.AppNavigation
+import com.example.danp_artgallery.screens.section.Exposition
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,17 +27,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MyApp(navigateToProfile: (Exposition) -> Unit) {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DANP_ArtGalleryTheme {
-        Greeting("Android")
-    }
 }

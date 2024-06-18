@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.home
 
+import android.provider.ContactsContract.Profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -12,11 +13,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.screens.section.DataProvider.expositionList
+import com.example.danp_artgallery.screens.section.Exposition
 import com.example.danp_artgallery.screens.section.ExpositionList
-import com.example.danp_artgallery.screens.section.expositionList
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navigateToProfile: (Exposition) -> Unit){
     Scaffold(
         topBar = {
             Box(
@@ -45,7 +47,7 @@ fun HomeScreen() {
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    ExpositionList(expositionList = expositionList)
+                    ExpositionList(expositionList = expositionList, navigateToProfile = navigateToProfile)
                 }
             }
         }
