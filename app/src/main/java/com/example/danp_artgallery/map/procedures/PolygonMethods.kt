@@ -8,6 +8,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.unit.Dp
 import com.example.danp_artgallery.map.models.Room
 
 @Composable
@@ -29,6 +30,9 @@ fun drawRooms(rooms: List<Room>){
         val offsetX = (canvasWidth - (maxX - minX) * scale) / 2 - minX * scale
         val offsetY = (canvasHeight - (maxY - minY) * scale) / 2 - minY * scale
 
+        // Line thickness
+        val lineWidth = Dp(2f).toPx()
+
         // Drawing the rooms
         for (room in rooms) {
             val points = room.points.map { point ->
@@ -37,7 +41,11 @@ fun drawRooms(rooms: List<Room>){
                     y = point.y * scale + offsetY
                 )
             }
-            drawPolygon(points, Color.Blue)
+            drawLine(Color.Black, start = points[0], end = points[1], strokeWidth = lineWidth)
+            drawLine(Color.Black, start = points[1], end = points[2], strokeWidth = lineWidth)
+            drawLine(Color.Black, start = points[2], end = points[3], strokeWidth = lineWidth)
+            drawLine(Color.Black, start = points[3], end = points[0], strokeWidth = lineWidth)
+            //drawPolygon(points, Color.Blue)
         }
     }
 }
