@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
+import com.example.danp_artgallery.map.CityMapScreen
 import com.example.danp_artgallery.map.GalleryMapScreen
 
 @Composable
@@ -74,8 +75,7 @@ fun AppNavigation(context: Context) {
 
 
             composable(route = Screens.MapScreen.name) {
-                //CityMapScreen()
-                GalleryMapScreen(context)
+                CityMapScreen(context)
             }
 
             composable(route = Screens.InfoScreen.name) {
