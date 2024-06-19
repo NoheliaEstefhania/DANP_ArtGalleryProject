@@ -2,8 +2,11 @@ package com.example.danp_artgallery.map.procedures
 
 import android.graphics.RectF
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -16,6 +19,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import com.example.danp_artgallery.map.models.Room
@@ -32,8 +37,14 @@ fun DrawRooms(rooms: List<Room>){
         }
     }
 
+    // Defining element colors
+    var lineColor = MaterialTheme.colorScheme.outline
+    var textColor = MaterialTheme.colorScheme.tertiary
+
     Canvas(modifier = Modifier
         .fillMaxSize()
+        .padding(horizontal = Dp(10f))
+        .background(MaterialTheme.colorScheme.background)
         .pointerInput(Unit) {
             detectTapGestures { offset ->
                 roomRects.forEachIndexed { index, rect ->
@@ -68,7 +79,7 @@ fun DrawRooms(rooms: List<Room>){
 
             // Drawing the rooms
             for (room in rooms) {
-                drawRoom(room, scale, offsetX, offsetY, lineWidth, roomRects)
+                drawRoom(room, scale, offsetX, offsetY, lineWidth, roomRects, lineColor, textColor)
             }
         } else {
             // Draw only the selected room
@@ -86,13 +97,9 @@ fun DrawRooms(rooms: List<Room>){
             // Line thickness
             val lineWidth = Dp(2f).toPx()
 
-            drawRoom(selectedRoom!!, scale, offsetX, offsetY, lineWidth, roomRects)
+            drawRoom(selectedRoom!!, scale, offsetX, offsetY, lineWidth, roomRects, lineColor, textColor)
         }
     }
-}
-
-private fun handleRectangleClick(index: Int) {
-    println("Rectangle $index touched")
 }
 
 // General class bounds
@@ -120,7 +127,9 @@ fun DrawScope.drawRoom(
     offsetX: Float,
     offsetY: Float,
     lineWidth: Float,
-    roomRects: MutableList<RectF>
+    roomRects: MutableList<RectF>,
+    lineColor: Color,
+    textColor: Color
 ) {
     val points = room.points.map { point ->
         Offset(
@@ -130,10 +139,26 @@ fun DrawScope.drawRoom(
     }
 
     // Draw the rectangle (room)
-    drawLine(Color.Black, start = points[0], end = points[1], strokeWidth = lineWidth)
-    drawLine(Color.Black, start = points[1], end = points[2], strokeWidth = lineWidth)
-    drawLine(Color.Black, start = points[2], end = points[3], strokeWidth = lineWidth)
-    drawLine(Color.Black, start = points[3], end = points[0], strokeWidth = lineWidth)
+    drawLine(lineColor, start = points[0], end = points[1], strokeWidth = lineWidth)
+    drawLine(lineColor, start = points[1], end = points[2], strokeWidth = lineWidth)
+    drawLine(lineColor, start = points[2], end = points[3], strokeWidth = lineWidth)
+    drawLine(lineColor, start = points[3], end = points[0], strokeWidth = lineWidth)
+
+    // Calculate the center of the room
+    val centerX = (points[0].x + points[2].x) / 2
+    val centerY = (points[0].y + points[2].y) / 2
+
+    // Draw the room name at the center
+    drawContext.canvas.nativeCanvas.drawText(
+        room.name,
+        centerX,
+        centerY,
+        android.graphics.Paint().apply {
+            color = textColor.toArgb()
+            textAlign = android.graphics.Paint.Align.CENTER
+            textSize = Dp(12f).toPx()
+        }
+    )
 
     // Store the rectangle bounds
     roomRects.add(RectF(points[0].x, points[0].y, points[2].x, points[2].y))
