@@ -69,7 +69,7 @@ fun AppNavigation() {
                 )
             }
             composable(route = Screens.SearchScreen.name) {
-                SearchScreen()
+                SearchScreen(navController = navController)
             }
             composable(route = Screens.MapScreen.name) {
                 CityMapScreen()
