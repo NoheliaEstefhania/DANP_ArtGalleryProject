@@ -21,15 +21,14 @@ import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
 import com.example.danp_artgallery.screens.views.ExpositionDetailScreen
 
-
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val navBckStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBckStackEntry?.destination
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
                 listOfNavItems.forEach { navItem ->
                     NavigationBarItem(
                         selected = currentDestination?.hierarchy?.any { it.route == navItem.route } == true,
@@ -47,18 +46,14 @@ fun AppNavigation() {
                                 imageVector = navItem.icon,
                                 contentDescription = null
                             )
-
                         },
                         label = {
                             Text(text = navItem.label)
                         }
                     )
                 }
-
             }
-
         }
-
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -71,13 +66,11 @@ fun AppNavigation() {
                         navController.navigate("${Screens.ExpositionDetailScreen.name}/$expositionTitle")
                     }
                 )
-
             }
 
             composable(route = Screens.SearchScreen.name) {
                 SearchScreen()
             }
-
 
             composable(route = Screens.MapScreen.name) {
                 CityMapScreen()
@@ -86,13 +79,15 @@ fun AppNavigation() {
             composable(route = Screens.InfoScreen.name) {
                 InfoScreen()
             }
+
             composable(route = "${Screens.ExpositionDetailScreen.name}/{expositionTitle}") { backStackEntry ->
                 val expositionTitle = backStackEntry.arguments?.getString("expositionTitle")
                 if (expositionTitle != null) {
                     ExpositionDetailScreen(expositionTitle = expositionTitle)
+                } else {
+                    Text(text = "Exposition not found")
                 }
             }
-
         }
     }
 }

@@ -1,37 +1,31 @@
 package com.example.danp_artgallery.home
 
-import android.provider.ContactsContract.Profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.danp_artgallery.R
-import com.example.danp_artgallery.model.DataProvider.expositionList
-import com.example.danp_artgallery.model.Exposition
+import com.example.danp_artgallery.model.DataProvider
 import com.example.danp_artgallery.screens.section.ExpositionList
 
 @Composable
-fun HomeScreen(navigateToExpositionDetail: (Exposition) -> Unit){
+fun HomeScreen(navigateToExpositionDetail: (String) -> Unit) {
     Scaffold(
         topBar = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp), // Ajusta el padding según sea necesario
+                    .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.logo), // Reemplaza 'logo' con el ID de tu imagen
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = "logo",
-                    modifier = Modifier
-                        .size(50.dp)
+                    modifier = Modifier.size(50.dp)
                 )
             }
         },
@@ -47,7 +41,8 @@ fun HomeScreen(navigateToExpositionDetail: (Exposition) -> Unit){
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    ExpositionList(expositionList = expositionList, navigateToExpositionDetail = navigateToExpositionDetail)
+                    val expositions = DataProvider.expositionList
+                    ExpositionList(expositionList = expositions, navigateToExpositionDetail = navigateToExpositionDetail)
                 }
             }
         }

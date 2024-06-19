@@ -14,21 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.danp_artgallery.model.DataProvider
 import com.example.danp_artgallery.model.Exposition
 
-
 @Composable
-fun ExpositionsDetailFunction(exposition: Exposition, navigateToExpositionDetail: (Exposition)-> Unit) {
+fun ExpositionsDetailFunction(exposition: Exposition, navigateToExpositionDetail: (String) -> Unit) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp).clickable { navigateToExpositionDetail(exposition) }
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable { navigateToExpositionDetail(exposition.title) }
         ) {
             val imageModifier = Modifier
                 .height(150.dp)
@@ -54,7 +53,7 @@ fun ExpositionsDetailFunction(exposition: Exposition, navigateToExpositionDetail
 }
 
 @Composable
-fun ExpositionList(expositionList: List<Exposition>, navigateToExpositionDetail: (Exposition) -> Unit) {
+fun ExpositionList(expositionList: List<Exposition>, navigateToExpositionDetail: (String) -> Unit) {
     LazyColumn {
         items(expositionList) { item ->
             ExpositionsDetailFunction(exposition = item, navigateToExpositionDetail = navigateToExpositionDetail)

@@ -112,9 +112,3 @@ fun ExpositionProperty(value: String, isLink: Boolean = false) {
 }
 
 
-@Preview
-@Composable
-fun ExpositionPreview() {
-    val exposition = DataProvider.exposition
-    ExpositionScreen(exposition = exposition)
-}
