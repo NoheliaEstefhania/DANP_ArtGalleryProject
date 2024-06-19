@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.map
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,15 +18,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.map.collection.collectRoomDataFromJSON
+import com.example.danp_artgallery.map.collection.parseRoomsFromJSON
+import com.example.danp_artgallery.map.procedures.DrawRooms
+import com.example.danp_artgallery.map.procedures.ShowMap
+import com.google.maps.android.compose.GoogleMap
 
 
 private val title = "SELECT THE ART GALLERY"
 @Composable
-fun CityMapScreen(){
+fun CityMapScreen(context: Context?){
+
+    var showMap by remember { mutableStateOf(true) }
+
     Scaffold(
         topBar = {
             Column(
@@ -83,7 +96,21 @@ fun CityMapScreen(){
                     .padding(paddingValues),  // Esto agrega padding para evitar que el contenido se solape con la topBar.
                 contentAlignment = Alignment.Center
             ) {
-                Text("poner aqui el cuadro de google maps")
+                if (showMap) {
+                    ShowMap(onMarkerClick = { showMap = false })
+                } else {
+                    if (context != null){
+                        // Loading rooms data
+                        val jsonString = collectRoomDataFromJSON(context, "GalleryRoomsData.json")
+                        jsonString?.let {
+                            // Parsing room data
+                            val rooms = parseRoomsFromJSON(it).rooms
+                            DrawRooms(rooms = rooms)
+                        } ?: run {
+                            DrawRooms(rooms = emptyList())
+                        }
+                    }
+                }
             }
         }
     )
@@ -92,5 +119,5 @@ fun CityMapScreen(){
 @Preview
 @Composable
 fun CityMapPreview(){
-    CityMapScreen()
+    CityMapScreen(null)
 }

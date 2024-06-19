@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -19,9 +20,10 @@ import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
+import com.example.danp_artgallery.map.GalleryMapScreen
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(context: Context) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -73,7 +75,7 @@ fun AppNavigation() {
 
 
             composable(route = Screens.MapScreen.name) {
-                CityMapScreen()
+                CityMapScreen(context)
             }
 
             composable(route = Screens.InfoScreen.name) {
