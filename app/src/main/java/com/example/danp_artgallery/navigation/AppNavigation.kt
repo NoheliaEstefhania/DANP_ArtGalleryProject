@@ -35,7 +35,7 @@ fun AppNavigation() {
                         onClick = {
                             navController.navigate(navItem.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+                                    saveState = false
                                 }
                                 launchSingleTop = true
                                 restoreState = true
@@ -46,6 +46,7 @@ fun AppNavigation() {
                                 imageVector = navItem.icon,
                                 contentDescription = null
                             )
+
                         },
                         label = {
                             Text(text = navItem.label)
@@ -67,25 +68,19 @@ fun AppNavigation() {
                     }
                 )
             }
-
             composable(route = Screens.SearchScreen.name) {
                 SearchScreen()
             }
-
             composable(route = Screens.MapScreen.name) {
                 CityMapScreen()
             }
-
             composable(route = Screens.InfoScreen.name) {
                 InfoScreen()
             }
-
             composable(route = "${Screens.ExpositionDetailScreen.name}/{expositionTitle}") { backStackEntry ->
                 val expositionTitle = backStackEntry.arguments?.getString("expositionTitle")
                 if (expositionTitle != null) {
                     ExpositionDetailScreen(expositionTitle = expositionTitle)
-                } else {
-                    Text(text = "Exposition not found")
                 }
             }
         }
