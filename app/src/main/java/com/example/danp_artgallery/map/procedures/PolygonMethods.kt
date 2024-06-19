@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -20,22 +21,29 @@ import androidx.compose.ui.unit.Dp
 import com.example.danp_artgallery.map.models.Room
 
 @Composable
-fun drawRooms(rooms: List<Room>){
+fun DrawRooms(rooms: List<Room>){
     var selectedRoom by remember { mutableStateOf<Room?>(null) }
     val roomRects = remember { mutableStateListOf<RectF>()}
+
+    DisposableEffect(Unit) {
+        onDispose {
+            // Reset the selected room when the composable is disposed
+            selectedRoom = null
+        }
+    }
 
     Canvas(modifier = Modifier
         .fillMaxSize()
         .pointerInput(Unit) {
             detectTapGestures { offset ->
                 roomRects.forEachIndexed { index, rect ->
-                    if (rect.contains(offset.x, offset.y)) {
+                    if (rect.contains(offset.x, offset.y) && selectedRoom == null) {
                         selectedRoom = rooms[index]
                     }
                 }
             }
         }
-    ){
+    ) {
         // Getting the limits
         val canvasWidth = size.width
         val canvasHeight = size.height

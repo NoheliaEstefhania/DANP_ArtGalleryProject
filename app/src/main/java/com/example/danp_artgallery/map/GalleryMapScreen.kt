@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.map.collection.collectRoomDataFromJSON
 import com.example.danp_artgallery.map.collection.parseRoomsFromJSON
-import com.example.danp_artgallery.map.procedures.drawRooms
+import com.example.danp_artgallery.map.procedures.DrawRooms
 
 
 private val title = "GALLERY MAP"
@@ -92,9 +92,9 @@ fun GalleryMapScreen(context: Context?){
                     jsonString?.let {
                         // Parsing room data
                         val rooms = parseRoomsFromJSON(it).rooms
-                        drawRooms(rooms = rooms)
+                        DrawRooms(rooms = rooms)
                     } ?: run {
-                        drawRooms(rooms = emptyList())
+                        DrawRooms(rooms = emptyList())
                     }
                 }
             }
