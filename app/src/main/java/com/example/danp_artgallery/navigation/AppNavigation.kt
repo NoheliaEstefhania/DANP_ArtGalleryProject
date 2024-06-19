@@ -15,13 +15,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import com.example.danp_artgallery.beacon.BeaconScreen
+import com.example.danp_artgallery.beacon.utils.BeaconViewModel
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(beaconViewModel: BeaconViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -78,6 +80,10 @@ fun AppNavigation() {
 
             composable(route = Screens.InfoScreen.name) {
                 InfoScreen()
+            }
+
+            composable(route = Screens.BeaconScreen.name){
+                BeaconScreen(beaconViewModel)
             }
         }
     }

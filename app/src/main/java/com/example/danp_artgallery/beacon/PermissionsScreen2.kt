@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.sp
 import com.example.danp_artgallery.beacon.utils.PermissionsHelper
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
+private const val title = "PERMISOS"
+
 @Composable
 fun PermissionScreen(onPermissionGranted: () -> Unit) {
     val context = LocalContext.current
@@ -34,15 +36,16 @@ fun PermissionScreen(onPermissionGranted: () -> Unit) {
             permissionStates[index] = group.all { permissions[it] == true }
         }
     }
-
     LaunchedEffect(Unit) {
         permissionGroups.forEachIndexed { index, group ->
-            permissionStates[index] = group.all { permissionsHelper.isPermissionGranted(it) }
+            permissionStates[index] =
+                group.all { permissionsHelper.isPermissionGranted(it) }
         }
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize()
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {

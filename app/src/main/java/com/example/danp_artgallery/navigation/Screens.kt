@@ -5,4 +5,5 @@ enum class Screens {
     SearchScreen,
     MapScreen,
     InfoScreen,
+    BeaconScreen,
 }

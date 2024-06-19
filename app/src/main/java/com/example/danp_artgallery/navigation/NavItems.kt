@@ -34,6 +34,10 @@ val listOfNavItems : List<NavItem> = listOf(
         icon = Icons.Default.Info,
         route = Screens.InfoScreen.name
     ),
-
+    NavItem(
+        label = "Beacon",
+        icon = Icons.Default.Info,
+        route = Screens.BeaconScreen.name
+    ),
 )
 
