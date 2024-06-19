@@ -19,12 +19,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.danp_artgallery.R
 
 
 private val title = "BEACON"
 @Composable
-fun BeaconScreen(){
+fun BeaconScreen(beaconViewModel: BeaconViewModel = BeaconsDetailFunction()) {
+    val beacons by beaconViewModel.beacons.observeAsState(emptyList())
     Scaffold(
         topBar = {
             Column(
@@ -84,11 +86,29 @@ fun BeaconScreen(){
             ) {
 
                 Column {
-                    BeaconList(beaconList = beaconList)
+                    BeaconList(beacons = beacons)
                 }
             }
         }
     )
+}
+
+class BeaconViewModel(application: Application) : AndroidViewModel(application) {
+    private val beaconManager = BeaconManager.getInstanceForApplication(application)
+    private val region = Region("all-beacons", null, null, null)
+
+    private val _beacons = MutableLiveData<List<Beacon>>()
+    val beacons: LiveData<List<Beacon>> = _beacons
+
+    private val rangingObserver = Observer<Collection<org.altbeacon.beacon.Beacon>> { beacons ->
+        _beacons.value = beacons.map { Beacon.fromAltBeacon(it) }
+    }
+
+    init {
+        val regionViewModel = beaconManager.getRegionViewModel(region)
+        regionViewModel.rangedBeacons.observeForever(rangingObserver)
+        beaconManager.startRangingBeacons(region)
+    }
 }
 
 @Preview

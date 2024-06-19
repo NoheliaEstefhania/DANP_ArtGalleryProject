@@ -14,17 +14,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.beacon.utils.Beacon
 import com.example.danp_artgallery.screens.section.Exposition
 import com.example.danp_artgallery.screens.section.ExpositionsDetailFunction
 
-data class Beacon(
-    val userId: String,
-    val otroDato: String
-)
-val beaconList = listOf(
-    Beacon(userId = "example of id kjfjdhbfjhdbfhdbfhbsdkhjbkhjfb\n", otroDato = "name\n"),
-        Beacon(userId = "example of id kjfjdhbfjhdbfhdbfhbsdkhjbkhjfb\n", otroDato = "name\n")
-)
+@Composable
+fun BeaconItem(beacon: Beacon) {
+    Surface(
+        shape = RoundedCornerShape(8.dp),
+        tonalElevation = 8.dp,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = "ID1: ${beacon.id1}", style = typography.bodySmall)
+            Text(text = "ID2: ${beacon.id2}", style = typography.bodySmall)
+            Text(text = "ID3: ${beacon.id3}", style = typography.bodySmall)
+            Text(text = "RSSI: ${beacon.rssi}", style = typography.bodySmall)
+            Text(text = "Distance: ${beacon.distance} meters", style = typography.bodySmall)
+        }
+    }
+}
 
 @Composable
 fun BeaconsDetailFunction(beacon: Beacon) {
@@ -51,10 +60,10 @@ fun BeaconsDetailFunction(beacon: Beacon) {
 }
 
 @Composable
-fun BeaconList(beaconList: List<Beacon>) {
+fun BeaconList(beacons: List<Beacon>) {
     LazyColumn {
-        items(beaconList) { item ->
-            BeaconsDetailFunction(beacon = item)
+        items(beacons) { beacon ->
+            BeaconItem(beacon)
         }
     }
 }
