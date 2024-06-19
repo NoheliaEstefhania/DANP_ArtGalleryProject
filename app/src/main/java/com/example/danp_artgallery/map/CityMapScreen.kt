@@ -26,6 +26,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.map.collection.collectRoomDataFromJSON
+import com.example.danp_artgallery.map.collection.parseRoomsFromJSON
+import com.example.danp_artgallery.map.procedures.DrawRooms
 import com.example.danp_artgallery.map.procedures.ShowMap
 import com.google.maps.android.compose.GoogleMap
 
@@ -96,7 +99,17 @@ fun CityMapScreen(context: Context?){
                 if (showMap) {
                     ShowMap(onMarkerClick = { showMap = false })
                 } else {
-                    GalleryMapScreen(context = context)
+                    if (context != null){
+                        // Loading rooms data
+                        val jsonString = collectRoomDataFromJSON(context, "GalleryRoomsData.json")
+                        jsonString?.let {
+                            // Parsing room data
+                            val rooms = parseRoomsFromJSON(it).rooms
+                            DrawRooms(rooms = rooms)
+                        } ?: run {
+                            DrawRooms(rooms = emptyList())
+                        }
+                    }
                 }
             }
         }
