@@ -4,8 +4,6 @@ enum class Screens {
     HomeScreen,
     SearchScreen,
     MapScreen,
-    InfoScreen,;
-    enum class ExpositionDetailClass {
-        ExpositionDetail,
-    }
+    InfoScreen,
+    ExpositionDetailScreen,
 }
