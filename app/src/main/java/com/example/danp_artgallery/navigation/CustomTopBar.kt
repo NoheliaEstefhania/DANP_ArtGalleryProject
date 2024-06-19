@@ -53,6 +53,10 @@ fun CustomTopBar(navController: NavController) {
             modifier = Modifier
                 .padding(end = 16.dp) // Añade padding al lado derecho
                 .size(50.dp)
+                .clickable {
+                    navController.navigate(Screens.InfoScreen.name) // Navega a InfoScreen
+                }
+
         )
     }
 
