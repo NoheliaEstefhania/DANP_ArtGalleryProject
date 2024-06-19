@@ -1,19 +1,39 @@
 package com.example.danp_artgallery.map.procedures
 
+import android.graphics.RectF
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import com.example.danp_artgallery.map.models.Room
 
 @Composable
 fun drawRooms(rooms: List<Room>){
-    Canvas(modifier = Modifier.fillMaxSize()) {
+    val roomRects = remember { mutableStateListOf<RectF>()}
+
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+            detectTapGestures { offset ->
+                roomRects.forEachIndexed { index, rect ->
+                    if (rect.contains(offset.x, offset.y)) {
+                        // Related event action
+                        handleRectangleClick(index)
+                    }
+                }
+            }
+        }
+    ){
         // Getting the limits
         val canvasWidth = size.width
         val canvasHeight = size.height
@@ -33,6 +53,8 @@ fun drawRooms(rooms: List<Room>){
         // Line thickness
         val lineWidth = Dp(2f).toPx()
 
+        roomRects.clear() // Clear previous rectangles
+
         // Drawing the rooms
         for (room in rooms) {
             val points = room.points.map { point ->
@@ -41,13 +63,21 @@ fun drawRooms(rooms: List<Room>){
                     y = point.y * scale + offsetY
                 )
             }
+
+            // Draw the rectangle (room)
             drawLine(Color.Black, start = points[0], end = points[1], strokeWidth = lineWidth)
             drawLine(Color.Black, start = points[1], end = points[2], strokeWidth = lineWidth)
             drawLine(Color.Black, start = points[2], end = points[3], strokeWidth = lineWidth)
             drawLine(Color.Black, start = points[3], end = points[0], strokeWidth = lineWidth)
-            //drawPolygon(points, Color.Blue)
+
+            // Store the rectangle bounds
+            roomRects.add(RectF(points[0].x, points[0].y, points[2].x, points[2].y))
         }
     }
+}
+
+private fun handleRectangleClick(index: Int) {
+    println("Rectangle $index touched")
 }
 
 // General class bounds
