@@ -1,5 +1,7 @@
 package com.example.danp_artgallery.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -22,8 +24,9 @@ import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(beaconViewModel: BeaconViewModel) {
+fun AppNavigation() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -83,7 +86,7 @@ fun AppNavigation(beaconViewModel: BeaconViewModel) {
             }
 
             composable(route = Screens.BeaconScreen.name){
-                BeaconScreen(beaconViewModel)
+                BeaconScreen()
             }
         }
     }
