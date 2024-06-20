@@ -6,7 +6,6 @@ import android.os.Build
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +18,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,45 +31,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.danp_artgallery.R
-import com.example.danp_artgallery.beacon.utils.BeaconData
 import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
-import com.example.danp_artgallery.beacon.utils.BeaconViewModel
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
-import org.altbeacon.beacon.Region
 
 
 private const val title = "BEACON"
 
-
-@Composable
-fun BeaconItem(beacon: BeaconData) {
-    Surface(
-        shape = RoundedCornerShape(8.dp),
-        tonalElevation = 8.dp,
-        modifier = Modifier.padding(8.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "ID1: ${beacon.id1}", style = typography.bodySmall)
-            Text(text = "ID2: ${beacon.id2}", style = typography.bodySmall)
-            Text(text = "ID3: ${beacon.id3}", style = typography.bodySmall)
-            Text(text = "RSSI: ${beacon.rssi}", style = typography.bodySmall)
-            Text(text = "Distance: ${beacon.distance} meters", style = typography.bodySmall)
-        }
-    }
-}
 
 @Composable
 fun BeaconList(beacons: List<String>) {

@@ -24,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.example.danp_artgallery.beacon.BeaconScreen
 import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
-import com.example.danp_artgallery.beacon.utils.BeaconViewModel
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen

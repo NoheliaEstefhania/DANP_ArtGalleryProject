@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
-import com.example.danp_artgallery.beacon.utils.BeaconViewModel
 import com.example.danp_artgallery.navigation.AppNavigation
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
