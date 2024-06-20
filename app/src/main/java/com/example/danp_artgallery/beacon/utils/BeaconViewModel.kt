@@ -71,7 +71,7 @@ class BeaconViewModel(
         beaconManager.startMonitoring(region)
         beaconManager.startRangingBeacons(region)
         // These two lines set up a Live Data observer so this Activity can get beacon data from the Application class
-        val regionViewModel = BeaconManager.getInstanceForApplication(context).getRegionViewModel(region)
+        val regionViewModel = beaconManager.getRegionViewModel(region)
         // observer will be called each time the monitored regionState changes (inside vs. outside region)
         regionViewModel.regionState.observeForever( centralMonitoringObserver)
         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
@@ -95,7 +95,7 @@ class BeaconViewModel(
         notificationManager.createNotificationChannel(channel)
         builder.setChannelId(channel.id)
         Log.d(TAG, "Calling enableForegroundServiceScanning")
-        BeaconManager.getInstanceForApplication(context).enableForegroundServiceScanning(builder.build(), 456)
+        beaconManager.enableForegroundServiceScanning(builder.build(), 456)
         Log.d(TAG, "Back from  enableForegroundServiceScanning")
     }
     // Configuración de los observadores para actualizar LiveData según el estado de los beacons

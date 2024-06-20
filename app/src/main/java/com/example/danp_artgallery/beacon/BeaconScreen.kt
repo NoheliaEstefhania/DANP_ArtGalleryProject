@@ -1,9 +1,12 @@
 package com.example.danp_artgallery.beacon
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Build
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +27,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,12 +38,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.beacon.utils.BeaconData
+import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
 import com.example.danp_artgallery.beacon.utils.BeaconViewModel
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
@@ -68,6 +76,7 @@ fun BeaconItem(beacon: BeaconData) {
 
 @Composable
 fun BeaconList(beacons: List<String>) {
+    Log.d("LIST", beacons.toString())
     LazyColumn {
         items(beacons) { beaconInfo  ->
             Text(text = beaconInfo, style = typography.bodySmall)
@@ -77,27 +86,25 @@ fun BeaconList(beacons: List<String>) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BeaconScreen() {
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+fun BeaconScreen(context: Context, lifecycleOwner: ComponentActivity, app: BeaconReferenceApplication) {
     val permissionsHelper = PermissionsHelper(context)
     val permissionGroups by remember { mutableStateOf(permissionsHelper.beaconScanPermissionGroupsNeeded()) }
     val beaconsListText = remember { mutableStateOf(emptyList<String>())}
-    val beaconCountText = remember { mutableStateOf("")}
-    val beaconViewModel = viewModel<BeaconViewModel>(
-        factory = object : ViewModelProvider.Factory {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return BeaconViewModel(
-                    context = context,
-                    beaconManager = BeaconManager.getInstanceForApplication(context),
-                ) as T
-            }
-        }
-    )
-    val region = beaconViewModel.region
-    val rangingText = remember { mutableStateOf("")}
-    val monitoringText = remember { mutableStateOf("")}
+    val beaconCountText = remember { mutableStateOf("--------")}
+//    val beaconViewModel = viewModel<BeaconViewModel>(
+//        factory = object : ViewModelProvider.Factory {
+//            @RequiresApi(Build.VERSION_CODES.O)
+//            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//                return BeaconViewModel(
+//                    context = context,
+//                    beaconManager = BeaconManager.getInstanceForApplication(context),
+//                ) as T
+//            }
+//        }
+//    )
+    val region = app.region
+    val rangingText = remember { mutableStateOf("Stop Ranging")}
+    val monitoringText = remember { mutableStateOf("Stop Monitoring")}
     var alertDialog: AlertDialog? = null
     val monitoringObserver = Observer<Int> { state ->
         var dialogTitle = "Beacons detected"
@@ -108,7 +115,7 @@ fun BeaconScreen() {
             dialogMessage = "didExitRegionEvent has fired"
             stateString == "outside"
             beaconCountText.value = "Outside of the beacon region -- no beacons detected"
-            beaconsListText.value = emptyList()
+            beaconsListText.value = arrayListOf("1", "2"," 3")
         }
         else {
             beaconCountText.value = "Inside the beacon region."
@@ -134,14 +141,9 @@ fun BeaconScreen() {
         }
     }
 
-    Log.d("BeaconScreen", BeaconManager.getInstanceForApplication(context).getRegionViewModel(region).toString())
-    Log.d("BeaconScreen", region.toString())
 
     val regionViewModel = BeaconManager.getInstanceForApplication(context).getRegionViewModel(region)
     // observer will be called each time the monitored regionState changes (inside vs. outside region)
-    Log.d("BeaconScreen", regionViewModel.rangedBeacons.toString())
-    Log.d("BeaconScreen", monitoringObserver.toString())
-    Log.d("BeaconScreen", rangingObserver.toString())
     regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
     // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
     regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
@@ -244,7 +246,12 @@ fun BeaconScreen() {
         },
         content = { paddingValues ->
             if (allPermissionGroupsGranted(context, permissionGroups)) {
-                beaconViewModel.setupBeaconScanning()
+                val lifecycleState = lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
+                LaunchedEffect (lifecycleState){
+                    if (BeaconManager.getInstanceForApplication(context).monitoredRegions.size == 0) {
+                        app.setupBeaconScanning()
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
@@ -254,21 +261,27 @@ fun BeaconScreen() {
                 ) {
                     Column {
                         BeaconList(beacons = beaconsListText.value)
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = {
-                            monitoringButtonTapped()
+                    Row (
+                        modifier =
+                        Modifier.align(Alignment.BottomCenter)
+                            .padding(bottom = 16.dp)
+                    ){
+                        Button(
+                            onClick = {
+                                monitoringButtonTapped()
+                            }
+                        ) {
+                            Text(monitoringText.value)
                         }
-                    ) {
-                        Text(monitoringText.value)
-                    }
-                    Button(
-                        onClick = {
-                            rangingButtonTapped()
+                        Button(
+                            onClick = {
+                                rangingButtonTapped()
+                            }
+                        ) {
+                            Text(rangingText.value)
                         }
-                    ) {
-                        Text(rangingText.value)
                     }
                 }
             } else {

@@ -1,7 +1,10 @@
 package com.example.danp_artgallery.navigation
 
+import android.content.Context
 import android.os.Build
+import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -11,13 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.example.danp_artgallery.beacon.BeaconScreen
+import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
 import com.example.danp_artgallery.beacon.utils.BeaconViewModel
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
@@ -26,7 +32,7 @@ import com.example.danp_artgallery.map.CityMapScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation() {
+fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity, app: BeaconReferenceApplication) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -86,7 +92,7 @@ fun AppNavigation() {
             }
 
             composable(route = Screens.BeaconScreen.name){
-                BeaconScreen()
+                BeaconScreen(context, lifecycleOwner, app)
             }
         }
     }
