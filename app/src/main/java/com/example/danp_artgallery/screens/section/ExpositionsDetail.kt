@@ -1,8 +1,7 @@
 package com.example.danp_artgallery.screens.section
 
-
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,30 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.danp_artgallery.R
-
-
-data class Exposition(
-    @DrawableRes val imageResource:Int,
-    val title: String,
-    val expositions: List<String>
-)
-val expositionList = listOf(Exposition(R.drawable.ccunsa, title = "CARPINTERO DE NIDOS\n", listOf("De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.\n", "Daniel Gallegos\n")),
-    Exposition(R.drawable.ccunsa, title = "CARPINTERO DE NIDOS\n", listOf("De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.\n", "Daniel Gallegos\n")),
-    Exposition(R.drawable.ccunsa, title = "CARPINTERO DE NIDOS\n", listOf("De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.\n", "Daniel Gallegos\n")),
-    Exposition(R.drawable.ccunsa, title = "CARPINTERO DE NIDOS\n", listOf("De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.\n", "Daniel Gallegos\n")))
+import com.example.danp_artgallery.model.Exposition
 
 @Composable
-fun ExpositionsDetailFunction(exposition: Exposition) {
+fun ExpositionsDetailFunction(exposition: Exposition, navigateToExpositionDetail: (String) -> Unit) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable { navigateToExpositionDetail(exposition.title) }
         ) {
             val imageModifier = Modifier
                 .height(150.dp)
@@ -64,16 +53,10 @@ fun ExpositionsDetailFunction(exposition: Exposition) {
 }
 
 @Composable
-fun ExpositionList(expositionList: List<Exposition>) {
+fun ExpositionList(expositionList: List<Exposition>, navigateToExpositionDetail: (String) -> Unit) {
     LazyColumn {
         items(expositionList) { item ->
-            ExpositionsDetailFunction(exposition = item)
+            ExpositionsDetailFunction(exposition = item, navigateToExpositionDetail = navigateToExpositionDetail)
         }
     }
-}
-
-@Preview
-@Composable
-fun ExpositionPreview(){
-    ExpositionsDetailFunction(expositionList[0])
 }

@@ -28,6 +28,7 @@ import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
+import com.example.danp_artgallery.screens.views.ExpositionDetailScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -36,15 +37,15 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity, app: Beac
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val navBckStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBckStackEntry?.destination
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentDestination = navBackStackEntry?.destination
                 listOfNavItems.forEach { navItem ->
                     NavigationBarItem(
                         selected = currentDestination?.hierarchy?.any { it.route == navItem.route } == true,
                         onClick = {
                             navController.navigate(navItem.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+                                    saveState = false
                                 }
                                 launchSingleTop = true
                                 restoreState = true
@@ -62,11 +63,8 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity, app: Beac
                         }
                     )
                 }
-
             }
-
         }
-
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -74,24 +72,30 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity, app: Beac
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(route = Screens.HomeScreen.name) {
-                HomeScreen()
+                HomeScreen(
+                    navigateToExpositionDetail = { expositionTitle ->
+                        navController.navigate("${Screens.ExpositionDetailScreen.name}/$expositionTitle")
+                    }
+                )
             }
-
             composable(route = Screens.SearchScreen.name) {
-                SearchScreen()
+                SearchScreen(navController = navController)
             }
-
-
             composable(route = Screens.MapScreen.name) {
-                CityMapScreen()
+                CityMapScreen(context)
             }
-
             composable(route = Screens.InfoScreen.name) {
                 InfoScreen()
             }
 
             composable(route = Screens.BeaconScreen.name){
                 BeaconScreen(context, lifecycleOwner, app)
+            }
+            composable(route = "${Screens.ExpositionDetailScreen.name}/{expositionTitle}") { backStackEntry ->
+                val expositionTitle = backStackEntry.arguments?.getString("expositionTitle")
+                if (expositionTitle != null) {
+                    ExpositionDetailScreen(expositionTitle = expositionTitle)
+                }
             }
         }
     }

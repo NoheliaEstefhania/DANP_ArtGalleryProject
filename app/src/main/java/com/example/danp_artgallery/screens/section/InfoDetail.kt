@@ -1,12 +1,9 @@
 package com.example.danp_artgallery.screens.section
 
-
-import android.net.wifi.ScanResult.InformationElement
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
@@ -19,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
-
 
 data class ArtGallery(
     @DrawableRes val imageResource:Int,

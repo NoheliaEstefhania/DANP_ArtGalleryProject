@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.map
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,11 +21,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.map.collection.collectRoomDataFromJSON
+import com.example.danp_artgallery.map.collection.parseRoomsFromJSON
+import com.example.danp_artgallery.map.procedures.DrawRooms
 
 
 private val title = "GALLERY MAP"
 @Composable
-fun GalleryMapScreen(){
+fun GalleryMapScreen(context: Context?){
     Scaffold(
         topBar = {
             Column(
@@ -82,7 +86,17 @@ fun GalleryMapScreen(){
                     .padding(paddingValues),  // Esto agrega padding para evitar que el contenido se solape con la topBar.
                 contentAlignment = Alignment.Center
             ) {
-                Text("poner aqui el mapa de la galeria")
+                if (context != null){
+                    // Loading rooms data
+                    val jsonString = collectRoomDataFromJSON(context, "GalleryRoomsData.json")
+                    jsonString?.let {
+                        // Parsing room data
+                        val rooms = parseRoomsFromJSON(it).rooms
+                        DrawRooms(rooms = rooms)
+                    } ?: run {
+                        DrawRooms(rooms = emptyList())
+                    }
+                }
             }
         }
     )
@@ -91,5 +105,5 @@ fun GalleryMapScreen(){
 @Preview
 @Composable
 fun GalleryMapPreview(){
-    GalleryMapScreen()
+    GalleryMapScreen(null)
 }
