@@ -33,19 +33,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.navigation.Screens
 
 @Composable
-fun BeaconScanPermissionsScreen() {
+fun BeaconScanPermissionsScreen(navController: NavController) {
     val context = LocalContext.current
     val permissionsHelper = remember { PermissionsHelper(context) }
     val permissionGroups by remember { mutableStateOf(permissionsHelper.beaconScanPermissionGroupsNeeded()) }
     val continueButtonEnabled = remember { mutableStateOf(false) }
     val tag = "PermissionsScreen"
-    val navController = rememberNavController()
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()

@@ -11,22 +11,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
 import com.example.danp_artgallery.navigation.AppNavigation
 import com.example.danp_artgallery.model.Exposition
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 class MainActivity : ComponentActivity() {
-    lateinit var beaconReferenceApplication: BeaconReferenceApplication
+//    lateinit var beaconReferenceApplication: BeaconReferenceApplication
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            beaconReferenceApplication = application as BeaconReferenceApplication
+//            beaconReferenceApplication = application as BeaconReferenceApplication
 
-            AppNavigation(this, this,beaconReferenceApplication)
+            AppNavigation(this, this)
         }
     }
     companion object {

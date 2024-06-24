@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -23,7 +24,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import com.example.danp_artgallery.beacon.BeaconScreen
-import com.example.danp_artgallery.beacon.utils.BeaconReferenceApplication
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.info.InfoScreen
@@ -32,7 +32,7 @@ import com.example.danp_artgallery.screens.views.ExpositionDetailScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity, app: BeaconReferenceApplication) {
+fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
@@ -89,7 +89,7 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity, app: Beac
             }
 
             composable(route = Screens.BeaconScreen.name){
-                BeaconScreen(context, lifecycleOwner, app)
+                BeaconScreen(context, lifecycleOwner, navController)
             }
             composable(route = "${Screens.ExpositionDetailScreen.name}/{expositionTitle}") { backStackEntry ->
                 val expositionTitle = backStackEntry.arguments?.getString("expositionTitle")
