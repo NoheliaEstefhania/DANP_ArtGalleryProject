@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
@@ -97,7 +96,16 @@ fun DrawRooms(rooms: List<Room>){
             // Line thickness
             val lineWidth = Dp(2f).toPx()
 
-            drawRoom(selectedRoom!!, scale, offsetX, offsetY, lineWidth, roomRects, lineColor, textColor)
+            drawRoom(
+                selectedRoom!!,
+                scale,
+                offsetX,
+                offsetY,
+                lineWidth,
+                roomRects,
+                lineColor,
+                textColor
+            )
         }
     }
 }

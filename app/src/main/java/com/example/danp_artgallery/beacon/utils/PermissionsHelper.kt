@@ -7,20 +7,33 @@ import androidx.core.content.ContextCompat
 
 class PermissionsHelper(val context: Context) {
     fun isPermissionGranted(permissionString: String): Boolean {
-        return (ContextCompat.checkSelfPermission(context, permissionString) == PackageManager.PERMISSION_GRANTED)
+        return (
+                ContextCompat.checkSelfPermission(
+                    context,
+                    permissionString
+                ) == PackageManager.PERMISSION_GRANTED
+        )
     }
 
     fun setFirstTimeAskingPermission(permissionString: String, isFirstTime: Boolean) {
-        val sharedPreference = context.getSharedPreferences("org.altbeacon.permissions", Context.MODE_PRIVATE)
+        val sharedPreference = context.getSharedPreferences(
+            "org.altbeacon.permissions",
+            Context.MODE_PRIVATE
+        )
         sharedPreference.edit().putBoolean(permissionString, isFirstTime).apply()
     }
 
     fun isFirstTimeAskingPermission(permissionString: String): Boolean {
-        val sharedPreference = context.getSharedPreferences("org.altbeacon.permissions", Context.MODE_PRIVATE)
+        val sharedPreference = context.getSharedPreferences(
+            "org.altbeacon.permissions",
+            Context.MODE_PRIVATE
+        )
         return sharedPreference.getBoolean(permissionString, true)
     }
 
-    fun beaconScanPermissionGroupsNeeded(backgroundAccessRequested: Boolean = false): List<Array<String>> {
+    fun beaconScanPermissionGroupsNeeded(
+        backgroundAccessRequested: Boolean = false
+    ): List<Array<String>> {
         val permissions = ArrayList<Array<String>>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
@@ -29,7 +42,12 @@ class PermissionsHelper(val context: Context) {
             permissions.add(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))
+            permissions.add(
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            )
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissions.add(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
@@ -37,7 +55,7 @@ class PermissionsHelper(val context: Context) {
         return permissions
     }
 
-    fun allPermissionsGranted(context: Context, backgroundAccessRequested: Boolean): Boolean {
+    fun allPermissionsGranted(backgroundAccessRequested: Boolean): Boolean {
         val permissionsGroups = beaconScanPermissionGroupsNeeded(backgroundAccessRequested)
         for (permissionsGroup in permissionsGroups) {
             for (permission in permissionsGroup) {

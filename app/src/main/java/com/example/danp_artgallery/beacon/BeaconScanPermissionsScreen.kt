@@ -1,9 +1,6 @@
 package com.example.danp_artgallery.beacon
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -32,20 +29,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.beacon.utils.PermissionsHelper
 import com.example.danp_artgallery.navigation.Screens
 
 @Composable
-fun BeaconScanPermissionsScreen() {
+fun BeaconScanPermissionsScreen(navController: NavController) {
     val context = LocalContext.current
     val permissionsHelper = remember { PermissionsHelper(context) }
-    val permissionGroups by remember { mutableStateOf(permissionsHelper.beaconScanPermissionGroupsNeeded()) }
+    val permissionGroups by remember {
+        mutableStateOf(
+            permissionsHelper.beaconScanPermissionGroupsNeeded()
+        )
+    }
     val continueButtonEnabled = remember { mutableStateOf(false) }
     val tag = "PermissionsScreen"
-    val navController = rememberNavController()
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -120,12 +119,16 @@ fun BeaconScanPermissionsScreen() {
                 ) {
                     Text(
                         text = "Permissions Needed",
-                        style = typography.titleLarge.copy(color = MaterialTheme.colorScheme.primary),
+                        style = typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        ),
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
                         text = "In order to scan for beacons, this app requires the following permissions from the operating system. Please tap each button to grant each required permission.",
-                        style = typography.titleLarge.copy(color = MaterialTheme.colorScheme.primary),
+                        style = typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        ),
                         modifier = Modifier.padding(bottom = 16.dp),
                     )
 
@@ -134,7 +137,12 @@ fun BeaconScanPermissionsScreen() {
                             permissionGroup = permissionGroup,
                             onClick = {
                                 promptForPermissions(requestPermissionLauncher, permissionGroup)
-                                if(allPermissionGroupsGranted(context, permissionGroups = permissionGroups)){
+                                if(
+                                    allPermissionGroupsGranted(
+                                        context,
+                                        permissionGroups = permissionGroups
+                                    )
+                                ){
                                     continueButtonEnabled.value = true
                                 }
                             },
@@ -145,7 +153,12 @@ fun BeaconScanPermissionsScreen() {
 
                     Button(
                         onClick = {
-                            if (allPermissionGroupsGranted(context, permissionGroups = permissionGroups)) {
+                            if (
+                                allPermissionGroupsGranted(
+                                    context,
+                                    permissionGroups = permissionGroups
+                                )
+                            ) {
                                 navController.navigate(Screens.BeaconScreen.name)
                             }
                         },
@@ -161,9 +174,8 @@ fun BeaconScanPermissionsScreen() {
 }
 
 fun allPermissionGroupsGranted(context: Context, permissionGroups: List<Array<String>>): Boolean {
-    val permissionsHelper = PermissionsHelper(context)
     for (permissionsGroup in permissionGroups) {
-        if (!permissionsHelper.allPermissionsGranted(permissionsGroup)) {
+        if (!allPermissionsGranted(context, permissionsGroup)) {
             return false
         }
     }
@@ -177,8 +189,7 @@ fun PermissionButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
-    val permissionsHelper = PermissionsHelper(LocalContext.current)
-    val allGranted = permissionsHelper.allPermissionsGranted(permissionGroup)
+    val allGranted = allPermissionsGranted(LocalContext.current, permissionGroup)
 
     Button(
         onClick = onClick,
@@ -198,46 +209,12 @@ fun promptForPermissions(
     requestPermissionLauncher.launch(permissionsGroup)
 }
 
-
-
-class PermissionsHelper(private val context: Context) {
-    private fun isPermissionGranted(permissionString: String): Boolean {
-        return ContextCompat.checkSelfPermission(context, permissionString) == PackageManager.PERMISSION_GRANTED
-    }
-
-    fun setFirstTimeAskingPermission(permissionString: String, isFirstTime: Boolean) {
-        val sharedPreference = context.getSharedPreferences("org.altbeacon.permissions", Context.MODE_PRIVATE)
-        sharedPreference.edit().putBoolean(permissionString, isFirstTime).apply()
-    }
-
-    fun isFirstTimeAskingPermission(permissionString: String): Boolean {
-        val sharedPreference = context.getSharedPreferences("org.altbeacon.permissions", Context.MODE_PRIVATE)
-        return sharedPreference.getBoolean(permissionString, true)
-    }
-
-    fun beaconScanPermissionGroupsNeeded(backgroundAccessRequested: Boolean = false): List<Array<String>> {
-        val permissions = mutableListOf<Array<String>>()
-
-        permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && backgroundAccessRequested) {
-            permissions.add(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
+fun allPermissionsGranted(context: Context, permissionsGroup: Array<String>): Boolean {
+    val permissionHelper = PermissionsHelper(context)
+    for (permission in permissionsGroup) {
+        if (!permissionHelper.isPermissionGranted(permission)) {
+            return false
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            permissions.add(arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT))
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions.add(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-        }
-
-        return permissions
     }
-
-    fun allPermissionsGranted(permissionsGroup: Array<String>): Boolean {
-        for (permission in permissionsGroup) {
-            if (!isPermissionGranted(permission)) {
-                return false
-            }
-        }
-        return true
-    }
+    return true
 }

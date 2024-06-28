@@ -23,7 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.navigation.CustomTopBar
 
-private val title = "LOOK UP AN PAINT"
+private const val title = "LOOK UP AN PAINT"
 private val description = "Learn more by using QR code\nposted near to the paint"
 
 @Composable
@@ -41,7 +41,9 @@ fun SearchScreen(navController: NavController){
                 Spacer(modifier = Modifier.height(16.dp)) // Espacio entre la fila de íconos y el texto, ajusta el valor según sea necesario
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.primary),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
@@ -49,7 +51,9 @@ fun SearchScreen(navController: NavController){
 
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }

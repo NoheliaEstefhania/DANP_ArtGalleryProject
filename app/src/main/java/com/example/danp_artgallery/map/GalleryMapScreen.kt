@@ -26,7 +26,7 @@ import com.example.danp_artgallery.map.collection.parseRoomsFromJSON
 import com.example.danp_artgallery.map.procedures.DrawRooms
 
 
-private val title = "GALLERY MAP"
+private const val title = "GALLERY MAP"
 @Composable
 fun GalleryMapScreen(context: Context?){
     Scaffold(
@@ -74,7 +74,9 @@ fun GalleryMapScreen(context: Context?){
 
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.primary),
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }

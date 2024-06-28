@@ -18,7 +18,10 @@ import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.model.Exposition
 
 @Composable
-fun ExpositionsDetailFunction(exposition: Exposition, navigateToExpositionDetail: (String) -> Unit) {
+fun ExpositionsDetailFunction(
+    exposition: Exposition,
+    navigateToExpositionDetail: (String) -> Unit
+) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
@@ -53,10 +56,16 @@ fun ExpositionsDetailFunction(exposition: Exposition, navigateToExpositionDetail
 }
 
 @Composable
-fun ExpositionList(expositionList: List<Exposition>, navigateToExpositionDetail: (String) -> Unit) {
+fun ExpositionList(
+    expositionList: List<Exposition>,
+    navigateToExpositionDetail: (String) -> Unit
+) {
     LazyColumn {
         items(expositionList) { item ->
-            ExpositionsDetailFunction(exposition = item, navigateToExpositionDetail = navigateToExpositionDetail)
+            ExpositionsDetailFunction(
+                exposition = item,
+                navigateToExpositionDetail = navigateToExpositionDetail
+            )
         }
     }
 }

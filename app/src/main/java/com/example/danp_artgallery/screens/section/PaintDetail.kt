@@ -2,9 +2,13 @@ package com.example.danp_artgallery.screens.section
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -37,7 +41,10 @@ val paint = Paint(R.drawable.carpintero_nidos,
 
     title = "CARPINTERO DE NIDOS\n",
     descriptionTitle = "\nDescription\n",
-    description = "In the high Andes of Peru lived Qhapaq, a very special llama. Unlike other llamas, Qhapaq spoke Quechua, an ancient language of the Andes. One day, he found a stone with strange inscriptions in Quechua. Intrigued, he searched for answers.\n",
+    description = "In the high Andes of Peru lived Qhapaq, a very special llama. " +
+            "Unlike other llamas, Qhapaq spoke Quechua, an ancient language of the Andes. " +
+            "One day, he found a stone with strange inscriptions in Quechua. " +
+            "Intrigued, he searched for answers.\n",
     authorTitle = "Author: ",
     author = "Daniel Gallegos\n",
     tecniqueTitle = "Tecnique: ",
@@ -62,7 +69,9 @@ fun PaintsDetailFunction(paint: Paint) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = paint.title,
-                    style = typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
+                    style = typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
@@ -72,10 +81,22 @@ fun PaintsDetailFunction(paint: Paint) {
                 modifier = imageModifier,
                 contentScale = ContentScale.Crop
             )
-            Text(text = paint.descriptionTitle, style = typography.titleSmall.copy(color = Color.Blue))
-            Text(text = paint.description, style = typography.titleSmall)
-            Text(text = paint.authorTitle, style = typography.titleSmall.copy(color = Color.Blue))
-            Text(text = paint.author, style = typography.titleSmall)
+            Text(
+                text = paint.descriptionTitle,
+                style = typography.titleSmall.copy(color = Color.Blue)
+            )
+            Text(
+                text = paint.description,
+                style = typography.titleSmall
+            )
+            Text(
+                text = paint.authorTitle,
+                style = typography.titleSmall.copy(color = Color.Blue)
+            )
+            Text(
+                text = paint.author,
+                style = typography.titleSmall
+            )
 //            Row(
 //                modifier = Modifier.fillMaxWidth(),
 //                verticalAlignment = Alignment.CenterVertically
@@ -92,8 +113,14 @@ fun PaintsDetailFunction(paint: Paint) {
 //                    modifier = Modifier.align(Alignment.Start)
 //                )
 //            }
-            Text(text = paint.tecniqueTitle,style = typography.titleSmall.copy(color = Color.Blue))
-            Text(text = paint.tecnique, style = typography.titleSmall)
+            Text(
+                text = paint.tecniqueTitle,
+                style = typography.titleSmall.copy(color = Color.Blue)
+            )
+            Text(
+                text = paint.tecnique,
+                style = typography.titleSmall
+            )
         }
     }
 }
