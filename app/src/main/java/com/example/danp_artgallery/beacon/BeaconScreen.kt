@@ -27,8 +27,6 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,13 +34,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.beacon.utils.BeaconGalleryService
-import kotlinx.coroutines.delay
+import com.example.danp_artgallery.beacon.utils.PermissionsHelper
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
@@ -62,9 +59,15 @@ fun BeaconList(beacons: List<String>) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BeaconScreen(context: Context, lifecycleOwner: ComponentActivity, navController: NavController) {
+fun BeaconScreen(
+    context: Context,
+    lifecycleOwner: ComponentActivity,
+    navController: NavController
+) {
     val permissionsHelper = PermissionsHelper(context)
-    val permissionGroups by remember { mutableStateOf(permissionsHelper.beaconScanPermissionGroupsNeeded()) }
+    val permissionGroups by remember {
+        mutableStateOf(permissionsHelper.beaconScanPermissionGroupsNeeded())
+    }
     Scaffold(
         topBar = {
             Column(
@@ -117,7 +120,7 @@ fun BeaconScreen(context: Context, lifecycleOwner: ComponentActivity, navControl
         },
         content = { paddingValues ->
             if (allPermissionGroupsGranted(context, permissionGroups)) {
-                servicesUI(context = context, lifecycleOwner, paddingValues)
+                ServicesUI(context = context, lifecycleOwner, paddingValues)
 
             } else {
                 BeaconScanPermissionsScreen(navController)
@@ -128,7 +131,7 @@ fun BeaconScreen(context: Context, lifecycleOwner: ComponentActivity, navControl
 }
 
 @Composable
-fun servicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValues: PaddingValues) {
+fun ServicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValues: PaddingValues) {
     // on below line creating variable
     // for service status and button value.
     val serviceStatus = remember {
@@ -150,7 +153,7 @@ fun servicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValue
         if (state == MonitorNotifier.OUTSIDE) {
             dialogTitle = "No beacons detected"
             dialogMessage = "didExitRegionEvent has fired"
-            stateString == "outside"
+            stateString = "outside"
             beaconCountText.value = "Outside of the beacon region -- no beacons detected"
             beaconsListText.value = arrayListOf("1", "2"," 3")
         }
@@ -170,10 +173,20 @@ fun servicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValue
 
     val rangingObserver = Observer<Collection<Beacon>> { beacons ->
         Log.d("BeaconScreen", "Ranged: ${beacons.count()} beacons")
-        if (BeaconManager.getInstanceForApplication(context).rangedRegions.size > 0) {
+        if (BeaconManager.getInstanceForApplication(context).rangedRegions.isNotEmpty()) {
             beaconCountText.value = "Ranging enabled: ${beacons.count()} beacon(s) detected"
             val sortedBeacons = beacons.sortedBy { it.distance }
-                .map { "${it.id1}\nid2: ${it.id2} id3:  rssi: ${it.rssi}\nest. distance: ${it.distance} m" }
+                .map {
+                    "${
+                        it.id1
+                    }\nid2: ${
+                        it.id2
+                    } id3:  rssi: ${
+                        it.rssi
+                    }\nest. distance: ${
+                        it.distance
+                    } m"
+                }
             beaconsListText.value = sortedBeacons
         }
     }
@@ -181,7 +194,7 @@ fun servicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValue
     @RequiresApi(Build.VERSION_CODES.O)
     fun rangingButtonTapped() {
         val beaconManager = BeaconManager.getInstanceForApplication(context)
-        if (beaconManager.rangedRegions.size == 0) {
+        if (beaconManager.rangedRegions.isEmpty()) {
             beaconManager.startRangingBeacons(region)
             rangingText.value = "Stop Ranging"
             beaconCountText.value = "Ranging enabled -- awaiting first callback"
@@ -196,13 +209,14 @@ fun servicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValue
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun monitoringButtonTapped() {
-        var dialogTitle = ""
-        var dialogMessage = ""
+        val dialogTitle: String
+        val dialogMessage: String
         val beaconManager = BeaconManager.getInstanceForApplication(context)
-        if (beaconManager.monitoredRegions.size == 0) {
+        if (beaconManager.monitoredRegions.isEmpty()) {
             beaconManager.startMonitoring(region)
             dialogTitle = "Beacon monitoring started."
-            dialogMessage = "You will see a dialog if a beacon is detected, and another if beacons then stop being detected."
+            dialogMessage = "You will see a dialog if a beacon is detected, " +
+                    "and another if beacons then stop being detected."
             monitoringText.value = "Stop Monitoring"
         }
         else {
@@ -286,7 +300,9 @@ fun servicesUI(context: Context, lifecycleOwner: ComponentActivity, paddingValue
 
                         // starting the service
                         context.startService(Intent(context, BeaconGalleryService::class.java))
-                        val regionViewModel = BeaconManager.getInstanceForApplication(context).getRegionViewModel(region)
+                        val regionViewModel = BeaconManager.getInstanceForApplication(
+                            context
+                        ).getRegionViewModel(region)
                         // observer will be called each time the monitored regionState changes (inside vs. outside region)
                         regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
                         // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)

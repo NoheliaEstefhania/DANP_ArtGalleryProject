@@ -8,7 +8,8 @@ object DataProvider {
             imageResource = R.drawable.ccunsa,
             title = "CARPINTERO DE NIDOS",
             expositions = listOf(
-                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
+                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. " +
+                        "Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
                 "Daniel Gallegos"
             )
         ),
@@ -16,7 +17,8 @@ object DataProvider {
             imageResource = R.drawable.ccunsa,
             title = "EXPOSITION1",
             expositions = listOf(
-                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
+                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. " +
+                        "Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
                 "Daniel Gallegos"
             )
         ),
@@ -24,7 +26,8 @@ object DataProvider {
             imageResource = R.drawable.ccunsa,
             title = "EXPOSITION2",
             expositions = listOf(
-                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
+                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. " +
+                        "Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
                 "Daniel Gallegos"
             )
         ),
@@ -32,7 +35,8 @@ object DataProvider {
             imageResource = R.drawable.ccunsa,
             title = "EXPOSITION3",
             expositions = listOf(
-                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
+                "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. " +
+                        "Centro Cultural UNSA. Galería I.Centro Cultural UNSA.",
                 "Daniel Gallegos"
             )
         )

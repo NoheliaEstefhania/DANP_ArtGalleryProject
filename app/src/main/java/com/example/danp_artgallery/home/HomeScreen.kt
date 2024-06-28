@@ -42,7 +42,10 @@ fun HomeScreen(navigateToExpositionDetail: (String) -> Unit) {
                         .padding(16.dp)
                 ) {
                     val expositions = DataProvider.expositionList
-                    ExpositionList(expositionList = expositions, navigateToExpositionDetail = navigateToExpositionDetail)
+                    ExpositionList(
+                        expositionList = expositions,
+                        navigateToExpositionDetail = navigateToExpositionDetail
+                    )
                 }
             }
         }
