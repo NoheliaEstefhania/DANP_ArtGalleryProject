@@ -25,6 +25,8 @@ import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
 import com.example.danp_artgallery.screens.views.ExpositionDetailScreen
 import com.example.danp_artgallery.search.SearchScreen
+import com.example.danp_artgallery.settings.SettingScreen
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -83,10 +85,13 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                 SearchScreen(navController = navController)
             }
             composable(route = Screens.MapScreen.name) {
-                CityMapScreen(context)
+                CityMapScreen(context,navController = navController)
             }
             composable(route = Screens.InfoScreen.name) {
-                InfoScreen()
+                InfoScreen(navController = navController)
+            }
+            composable(route = Screens.SettingScreen.name) {
+                SettingScreen(navController = navController)
             }
 
             composable(route = Screens.BeaconScreen.name){
