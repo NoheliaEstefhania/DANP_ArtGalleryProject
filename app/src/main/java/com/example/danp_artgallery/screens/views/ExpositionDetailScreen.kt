@@ -47,7 +47,7 @@ fun ExpositionDetailScreen(expositionTitle: String) {
                             painter = painterResource(id = it.imageResource),
                             contentDescription = null,
                             modifier = Modifier
-                                .size(150.dp)
+                                .fillMaxSize()
                                 .padding(16.dp)
                         )
                         Text(text = it.title)
