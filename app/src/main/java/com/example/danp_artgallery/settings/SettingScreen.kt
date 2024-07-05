@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.navigation.CustomTopBar
+import com.example.danp_artgallery.navigation.Screens
 
 
 private val title = "SETTINGS"
@@ -65,14 +67,14 @@ fun SettingScreen(navController: NavController){
                     .padding(paddingValues),  // Esto agrega padding para evitar que el contenido se solape con la topBar.
                 contentAlignment = Alignment.Center
             ) {
-                SeccionInterruptores()
+                SeccionInterruptores(navController)
             }
         }
     )
 }
 
 @Composable
-fun SeccionInterruptores() {
+fun SeccionInterruptores(navController: NavController) {
     // Estados para los interruptores
     val estadoNotificacion = remember { mutableStateOf(false) }
     val estadoUbicacion = remember { mutableStateOf(false) }
@@ -84,6 +86,8 @@ fun SeccionInterruptores() {
         CardInterruptor(label = "Location", estado = estadoUbicacion)
         CardInterruptor(label = "Streaming audio", estado = estadoStreamingAudio)
         CardSelectionLanguaje(idiomaSeleccionado)
+        NavigationButton(navController)
+
     }
 }
 
@@ -142,6 +146,19 @@ fun LangujeOpcion(idioma: String, languajeSelected: MutableState<String>) {
             .clickable { languajeSelected.value = idioma }
             .padding(8.dp)
     )
+}
+
+@Composable
+fun NavigationButton(navController: NavController) {
+    Button(
+        onClick = {
+            // Navegar a BeaconScreen
+            navController.navigate(Screens.BeaconScreen.name)
+        },
+        //modifier = Modifier.align(Alignment.CenterHorizontally)
+    ) {
+        Text(text = "Go to Beacon Screen")
+    }
 }
 
 @Preview

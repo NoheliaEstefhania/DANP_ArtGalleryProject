@@ -54,9 +54,6 @@ fun CustomTopBar(navController: NavController) {
                 .clickable {
                     navController.navigate(Screens.SettingScreen.name) // Navega a InfoScreen
                 }
-
         )
     }
-
-
 }
