@@ -6,6 +6,6 @@ enum class Screens {
     MapScreen,
     InfoScreen,
     BeaconScreen,
-    ExpositionDetailScreen,
+    PictureDetailScreen,
     SettingScreen,
 }

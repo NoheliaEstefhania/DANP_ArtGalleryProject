@@ -67,6 +67,12 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:1.0.0")
     implementation("com.google.android.gms:play-services-maps:18.0.2")
     implementation(libs.androidx.appcompat)
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")// O la versión más reciente
+    implementation("androidx.activity:activity-compose:1.5.1")//O la versión más reciente
+    implementation("androidx.fragment:fragment-ktx:1.5.1")
+    implementation(libs.androidx.lifecycle.runtime.compose.android) //O la versión más reciente
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -12,10 +12,11 @@ import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.ViewModel.PictureViewModel
 import com.example.danp_artgallery.model.DataProvider
+import com.example.danp_artgallery.model.PictureDataProvider
 
 @Composable
-fun ExpositionDetailScreen(expositionTitle: String) {
-    val exposition = DataProvider.getExpositionByTitle(expositionTitle)
+fun PictureDetailScreen(picturePicture: String) {
+    val picture = PictureDataProvider.getPictureByTitle(picturePicture)
 
     Scaffold(
         topBar = {
@@ -40,7 +41,7 @@ fun ExpositionDetailScreen(expositionTitle: String) {
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                exposition?.let {
+                picture?.let {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -53,12 +54,12 @@ fun ExpositionDetailScreen(expositionTitle: String) {
                         )
                         Text(text = it.title)
                         Spacer(modifier = Modifier.height(16.dp))
-                        it.expositions.forEach { detail ->
-                            Text(text = detail)
-                        }
+                        Text(text = it.description)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(text = it.author)
                     }
                 } ?: run {
-                    Text(text = "Exposition not found")
+                    Text(text = "Picture not found")
                 }
             }
         }

@@ -16,11 +16,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.model.Exposition
+import com.example.danp_artgallery.model.Picture
 
 @Composable
-fun ExpositionsDetailFunction(
-    exposition: Exposition,
-    navigateToExpositionDetail: (String) -> Unit
+fun PicturesDetailFunction(
+    picture: Picture,
+    navigateToPictureDetail: (String) -> Unit
 ) {
     Surface(
         shape = RoundedCornerShape(8.dp),
@@ -30,7 +31,7 @@ fun ExpositionsDetailFunction(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { navigateToExpositionDetail(exposition.title) }
+                .clickable { navigateToPictureDetail(picture.title) }
         ) {
             val imageModifier = Modifier
                 .height(150.dp)
@@ -38,7 +39,7 @@ fun ExpositionsDetailFunction(
                 .clip(shape = RoundedCornerShape(8.dp))
 
             Image(
-                painter = painterResource(id = exposition.imageResource),
+                painter = painterResource(id = picture.imageResource),
                 contentDescription = null,
                 modifier = imageModifier,
                 contentScale = ContentScale.Crop
@@ -46,25 +47,25 @@ fun ExpositionsDetailFunction(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = exposition.title, style = typography.titleSmall)
+            Text(text = picture.title, style = typography.titleSmall)
 
-            for (item in exposition.expositions) {
-                Text(text = item, style = typography.bodySmall)
-            }
+            Text(text = picture.description, style = typography.titleSmall)
+
+            Text(text = picture.author, style = typography.titleSmall)
         }
     }
 }
 
 @Composable
-fun ExpositionList(
-    expositionList: List<Exposition>,
-    navigateToExpositionDetail: (String) -> Unit
+fun PictureList(
+    pictureList: List<Picture>,
+    navigateToPictureDetail: (String) -> Unit
 ) {
     LazyColumn {
-        items(expositionList) { item ->
-            ExpositionsDetailFunction(
-                exposition = item,
-                navigateToExpositionDetail = navigateToExpositionDetail
+        items(pictureList) { item ->
+            PicturesDetailFunction(
+                picture = item,
+                navigateToPictureDetail = navigateToPictureDetail
             )
         }
     }

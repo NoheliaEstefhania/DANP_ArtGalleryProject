@@ -13,12 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.danp_artgallery.ViewModel.PictureViewModel
 import com.example.danp_artgallery.beacon.BeaconScreen
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.info.InfoScreen
@@ -26,6 +28,7 @@ import com.example.danp_artgallery.map.CityMapScreen
 import com.example.danp_artgallery.screens.views.ExpositionDetailScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.settings.SettingScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -73,10 +76,10 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
         ) {
             composable(route = Screens.HomeScreen.name) {
                 HomeScreen(
-                    navigateToExpositionDetail = { expositionTitle ->
+                    navigateToExpositionDetail = { pictureTitle ->
                         navController.navigate("${
-                                Screens.ExpositionDetailScreen.name
-                            }/$expositionTitle"
+                                Screens.PictureDetailScreen.name
+                            }/$pictureTitle"
                         )
                     }
                 )
@@ -97,16 +100,19 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
             composable(route = Screens.BeaconScreen.name){
                 BeaconScreen(context, lifecycleOwner, navController)
             }
+            /**
             composable(route = "${
                     Screens.ExpositionDetailScreen.name
                 }/{expositionTitle}") { backStackEntry ->
                     val expositionTitle = backStackEntry.arguments?.getString(
                         "expositionTitle"
                     )
+
                     if (expositionTitle != null) {
                         ExpositionDetailScreen(expositionTitle = expositionTitle)
                     }
             }
+            */
         }
     }
 }
