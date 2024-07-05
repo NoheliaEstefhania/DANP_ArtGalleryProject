@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.beacon.utils.BeaconGalleryService
 import com.example.danp_artgallery.beacon.utils.PermissionsHelper
+import com.example.danp_artgallery.navigation.CustomTopBar
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
@@ -73,49 +74,22 @@ fun BeaconScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 24.dp) // Ajusta el padding según sea necesario
+                    .padding(vertical = 8.dp) // Ajusta el padding según sea necesario
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.arrow), // Reemplaza 'arrow' con el ID de tu imagen de flecha
-                        contentDescription = "flecha",
-                        modifier = Modifier
-                            .padding(start = 16.dp) // Añade padding al lado izquierdo
-                            .size(50.dp)
-                    )
 
-                    Spacer(modifier = Modifier.weight(1f)) // Espacio flexible para empujar el logo al centro
+                CustomTopBar(navController = navController)
 
-                    Image(
-                        painter = painterResource(id = R.drawable.logo), // Reemplaza 'logo' con el ID de tu imagen
-                        contentDescription = "logo",
-                        modifier = Modifier
-                            .size(50.dp)
-                    )
-
-                    Spacer(modifier = Modifier.weight(1f)) // Espacio flexible para empujar el ícono de configuración a la derecha
-
-                    Image(
-                        painter = painterResource(id = R.drawable.settings_img), // Reemplaza 'settings_img' con el ID de tu ícono de configuración
-                        contentDescription = "configuración",
-                        modifier = Modifier
-                            .padding(end = 16.dp) // Añade padding al lado derecho
-                            .size(50.dp)
-                    )
-                }
+                Spacer(modifier = Modifier.height(16.dp)) // Espacio entre la fila de íconos y el texto, ajusta el valor según sea necesario
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
                 Spacer(modifier = Modifier.height(16.dp)) // Espacio entre la fila de íconos y el texto, ajusta el valor según sea necesario
 
-                Text(
-                    text = title,
-                    style = typography.titleLarge.copy(color = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
             }
         },
         content = { paddingValues ->

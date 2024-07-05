@@ -79,7 +79,7 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                             }/$expositionTitle"
                         )
                     }
-                )
+                , navController = navController)
             }
             composable(route = Screens.SearchScreen.name) {
                 SearchScreen(navController = navController)

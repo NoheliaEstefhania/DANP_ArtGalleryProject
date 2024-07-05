@@ -2,6 +2,7 @@ package com.example.danp_artgallery.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,6 +54,35 @@ fun CustomTopBar(navController: NavController) {
                 .size(50.dp)
                 .clickable {
                     navController.navigate(Screens.SettingScreen.name) // Navega a InfoScreen
+                }
+        )
+    }
+}
+
+@Composable
+fun CustomTopBarHome(navController: NavController) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "logo",
+            modifier = Modifier
+                .size(50.dp)
+                .align(Alignment.Center) // Centra el logo en la vista
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.settings_img),
+            contentDescription = "configuración",
+            modifier = Modifier
+                .padding(end = 16.dp)
+                .size(50.dp)
+                .align(Alignment.CenterEnd) // Alinea el ícono de configuración a la derecha
+                .clickable {
+                    navController.navigate(Screens.SettingScreen.name)
                 }
         )
     }
