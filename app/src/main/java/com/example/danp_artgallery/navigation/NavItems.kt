@@ -39,5 +39,10 @@ val listOfNavItems : List<NavItem> = listOf(
         icon = Icons.Default.Info,
         route = Screens.BeaconScreen.name
     ),
+    NavItem(
+        label = "ListPaint",
+        icon = Icons.Default.Info,
+        route = Screens.ListPaintingsScreen.name
+    ),
 )
 

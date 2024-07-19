@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.beacon.BeaconScreen
+import com.example.danp_artgallery.data.vistas.PaintingListScreen
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
@@ -93,9 +94,8 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
             composable(route = Screens.SettingScreen.name) {
                 SettingScreen(navController = navController)
             }
-
-            composable(route = Screens.BeaconScreen.name){
-                BeaconScreen(context, lifecycleOwner, navController)
+            composable(route = Screens.ListPaintingsScreen.name){
+                PaintingListScreen()
             }
             composable(route = "${
                     Screens.ExpositionDetailScreen.name
