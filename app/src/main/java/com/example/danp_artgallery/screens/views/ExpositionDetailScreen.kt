@@ -2,7 +2,9 @@ package com.example.danp_artgallery.screens.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,13 +45,20 @@ fun ExpositionDetailScreen(expositionTitle: String) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Image(
-                            painter = painterResource(id = it.imageResource),
+ /*                       it.expositions.forEach{ imageResource ->
+                            Image(
+                            painter = painterResource(id = imageResource),
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(16.dp)
                         )
+                        }*/
+                        MaterialTheme {
+                            Surface {
+                                ImageCarousel(images = exposition.imageResource)
+                            }
+                        }
                         Text(text = it.title)
                         Spacer(modifier = Modifier.height(16.dp))
                         it.expositions.forEach { detail ->

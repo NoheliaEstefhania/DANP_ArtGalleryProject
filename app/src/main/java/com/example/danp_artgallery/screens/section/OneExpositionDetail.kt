@@ -60,15 +60,6 @@ private fun ExpositionHeader(
     val offset = (scrollState.value / 2)
     val offsetDp = with(LocalDensity.current) { offset.toDp() }
 
-    Image(
-        modifier = Modifier
-            .heightIn(max = containerHeight / 2)
-            .fillMaxWidth()
-            .padding(top = offsetDp),
-        painter = painterResource(id = exposition.imageResource),
-        contentScale = ContentScale.Crop,
-        contentDescription = null
-    )
 }
 
 @Composable
