@@ -44,8 +44,6 @@ fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavCo
                             text = "CURRENT EXPOSITIONS",
                             style = MaterialTheme.typography.titleLarge.copy(
                                 color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp
                             ),
 
                         )
