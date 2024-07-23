@@ -1,6 +1,5 @@
 package com.example.danp_artgallery.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -8,14 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.danp_artgallery.R
 import com.example.danp_artgallery.model.DataProvider
-import com.example.danp_artgallery.navigation.CustomTopBar
 import com.example.danp_artgallery.navigation.CustomTopBarHome
 import com.example.danp_artgallery.screens.section.ExpositionList
 
@@ -35,10 +31,12 @@ fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavCo
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
+                        .padding(16.dp),
+
                 ) {
                     Box (
                         modifier = Modifier
+                            .fillMaxWidth()
                             .padding(10.dp),
                         contentAlignment = Alignment.Center
                     ){
