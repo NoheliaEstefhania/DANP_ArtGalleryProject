@@ -1,6 +1,5 @@
 package com.example.danp_artgallery.screens.section
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,33 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.model.PaintAttributes
+import com.example.danp_artgallery.model.PaintDataProvider
 
-
-data class Paint(
-    @DrawableRes val imageResource:Int,
-    val title: String,
-    val descriptionTitle : String,
-    val description : String,
-    val authorTitle: String,
-    val author: String,
-    val tecniqueTitle: String,
-    val tecnique: String
-)
-
-val paint = Paint(R.drawable.carpintero_nidos,
-
-    title = "CARPINTERO DE NIDOS\n",
-    descriptionTitle = "\nDescription\n",
-    description = "In the high Andes of Peru lived Qhapaq, a very special llama. " +
-            "Unlike other llamas, Qhapaq spoke Quechua, an ancient language of the Andes. " +
-            "One day, he found a stone with strange inscriptions in Quechua. " +
-            "Intrigued, he searched for answers.\n",
-    authorTitle = "Author: ",
-    author = "Daniel Gallegos\n",
-    tecniqueTitle = "Tecnique: ",
-    tecnique = "Watercolor\n")
 @Composable
-fun PaintsDetailFunction(paint: Paint) {
+fun PaintsDetailFunction(paint: PaintAttributes) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
@@ -126,7 +103,7 @@ fun PaintsDetailFunction(paint: Paint) {
 }
 
 @Composable
-fun PaintDetailView(paint: Paint) {
+fun PaintDetailView(paint: PaintAttributes) {
     LazyColumn {
         item {
             PaintsDetailFunction(paint = paint)
@@ -134,8 +111,8 @@ fun PaintDetailView(paint: Paint) {
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun PaintPreview(){
-    PaintsDetailFunction(paint)
-}
+    PaintsDetailFunction()
+}*/

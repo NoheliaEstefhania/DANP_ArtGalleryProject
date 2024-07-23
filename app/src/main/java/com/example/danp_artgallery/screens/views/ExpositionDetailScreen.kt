@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
-import com.example.danp_artgallery.model.DataProvider
+import com.example.danp_artgallery.model.ExpositionDataProvider
 
 @Composable
 fun ExpositionDetailScreen(expositionTitle: String) {
-    val exposition = DataProvider.getExpositionByTitle(expositionTitle)
+    val exposition = ExpositionDataProvider.getExpositionByTitle(expositionTitle)
 
     Scaffold(
         topBar = {

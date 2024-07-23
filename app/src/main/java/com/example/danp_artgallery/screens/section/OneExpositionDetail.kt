@@ -1,14 +1,11 @@
 package com.example.danp_artgallery.screens.section
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,16 +16,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.danp_artgallery.model.Exposition
+import com.example.danp_artgallery.model.ExpositionAttributes
 
 @Composable
-fun ExpositionScreen(exposition: Exposition, onNavIconPressed: () -> Unit = { }) {
+fun ExpositionScreen(exposition: ExpositionAttributes, onNavIconPressed: () -> Unit = { }) {
     val scrollState = rememberScrollState()
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -54,7 +49,7 @@ fun ExpositionScreen(exposition: Exposition, onNavIconPressed: () -> Unit = { })
 @Composable
 private fun ExpositionHeader(
     scrollState: ScrollState,
-    exposition: Exposition,
+    exposition: ExpositionAttributes,
     containerHeight: Dp
 ) {
     val offset = (scrollState.value / 2)
@@ -63,7 +58,7 @@ private fun ExpositionHeader(
 }
 
 @Composable
-private fun ExpositionContent(exposition: Exposition, containerHeight: Dp) {
+private fun ExpositionContent(exposition: ExpositionAttributes, containerHeight: Dp) {
     Column {
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -79,7 +74,7 @@ private fun ExpositionContent(exposition: Exposition, containerHeight: Dp) {
 
 @Composable
 private fun Title(
-    exposition: Exposition
+    exposition: ExpositionAttributes
 ) {
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
         Text(
