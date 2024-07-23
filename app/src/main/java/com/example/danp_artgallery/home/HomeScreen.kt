@@ -7,11 +7,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.danp_artgallery.model.ExpositionDataProvider
+import com.example.danp_artgallery.data.model.ExpositionDataProvider
 import com.example.danp_artgallery.navigation.CustomTopBarHome
 import com.example.danp_artgallery.screens.section.ExpositionList
 

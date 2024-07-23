@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import com.example.danp_artgallery.model.ExpositionAttributes
+import com.example.danp_artgallery.data.model.ExpositionAttributes
 class ExpositionActivity : AppCompatActivity() {
 
     private val exposition: ExpositionAttributes by lazy {

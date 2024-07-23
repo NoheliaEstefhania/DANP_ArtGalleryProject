@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.model
+package com.example.danp_artgallery.data.model
 
 import com.example.danp_artgallery.R
 

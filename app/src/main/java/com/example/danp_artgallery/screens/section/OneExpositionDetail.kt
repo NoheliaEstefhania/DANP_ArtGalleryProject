@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.danp_artgallery.model.ExpositionAttributes
+import com.example.danp_artgallery.data.model.ExpositionAttributes
 
 @Composable
 fun ExpositionScreen(exposition: ExpositionAttributes, onNavIconPressed: () -> Unit = { }) {

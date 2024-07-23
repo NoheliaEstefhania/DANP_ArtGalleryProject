@@ -10,21 +10,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.danp_artgallery.R
-import com.example.danp_artgallery.model.PaintAttributes
-import com.example.danp_artgallery.model.PaintDataProvider
+import com.example.danp_artgallery.data.model.PaintAttributes
+import com.example.danp_artgallery.data.model.PaintDataProvider
 
 @Composable
 fun PaintsDetailFunction(paint: PaintAttributes) {
@@ -46,7 +43,7 @@ fun PaintsDetailFunction(paint: PaintAttributes) {
             Box(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     text = paint.title,
-                    style = typography.titleMedium.copy(
+                    style = MaterialTheme.typography.titleLarge.copy(
                         color = MaterialTheme.colorScheme.primary
                     ),
                     modifier = Modifier.align(Alignment.Center)
@@ -58,45 +55,38 @@ fun PaintsDetailFunction(paint: PaintAttributes) {
                 modifier = imageModifier,
                 contentScale = ContentScale.Crop
             )
+
             Text(
                 text = paint.descriptionTitle,
-                style = typography.titleSmall.copy(color = Color.Blue)
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
                 text = paint.description,
-                style = typography.titleSmall
+                style = MaterialTheme.typography.titleSmall
             )
             Text(
                 text = paint.authorTitle,
-                style = typography.titleSmall.copy(color = Color.Blue)
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
             )
             Text(
                 text = paint.author,
-                style = typography.titleSmall
+                style = MaterialTheme.typography.titleSmall
             )
-//            Row(
-//                modifier = Modifier.fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Text(
-//                    text = paint.authorTitle,
-//                    style = typography.titleSmall.copy(color = Color.Blue),
-//                    modifier = Modifier.align(Alignment.Start)
-//                )
-//                Spacer(modifier = Modifier.width(8.dp)) // Espacio entre el título y el autor
-//                Text(
-//                    text = paint.author,
-//                    style = typography.titleSmall,
-//                    modifier = Modifier.align(Alignment.Start)
-//                )
-//            }
+
             Text(
                 text = paint.tecniqueTitle,
-                style = typography.titleSmall.copy(color = Color.Blue)
+                style = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
             )
             Text(
                 text = paint.tecnique,
-                style = typography.titleSmall
+                style = MaterialTheme.typography.titleSmall
             )
         }
     }
@@ -111,8 +101,8 @@ fun PaintDetailView(paint: PaintAttributes) {
     }
 }
 
-/*@Preview
+@Preview
 @Composable
 fun PaintPreview(){
-    PaintsDetailFunction()
-}*/
+    PaintsDetailFunction(PaintDataProvider.paint)
+}

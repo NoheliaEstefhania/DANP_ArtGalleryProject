@@ -33,12 +33,12 @@ fun SearchScreen(navController: NavController){
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp) // Ajusta el padding según sea necesario
+                    .padding(vertical = 8.dp)
             ) {
 
                 CustomTopBar(navController = navController)
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espacio entre la fila de íconos y el texto, ajusta el valor según sea necesario
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleLarge.copy(
@@ -47,7 +47,7 @@ fun SearchScreen(navController: NavController){
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espacio entre la fila de íconos y el texto, ajusta el valor según sea necesario
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = description,
@@ -66,7 +66,7 @@ fun SearchScreen(navController: NavController){
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.qr_app), // Reemplaza 'your_image_resource' con el ID de tu imagen
+                    painter = painterResource(id = R.drawable.qr_app),
                     contentDescription = "Search Button",
                     modifier = Modifier
                         .clickable {

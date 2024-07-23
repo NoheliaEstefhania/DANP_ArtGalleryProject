@@ -17,9 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.danp_artgallery.data.model.ArtGalleryInformationAttributes
+import com.example.danp_artgallery.data.model.ArtGalleryInformationDataProvider
 import com.example.danp_artgallery.navigation.CustomTopBar
 import com.example.danp_artgallery.screens.section.InformationDetailView
-import com.example.danp_artgallery.screens.section.information
 
 
 @Composable
@@ -43,7 +44,7 @@ fun InfoScreen(navController: NavController){
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
-                Spacer(modifier = Modifier.height(16.dp)) // Espacio entre la fila de íconos y el texto, ajusta el valor según sea necesario
+                Spacer(modifier = Modifier.height(16.dp))
 
             }
         },
@@ -59,7 +60,7 @@ fun InfoScreen(navController: NavController){
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    InformationDetailView(artGallery = information)
+                    InformationDetailView(artGallery = ArtGalleryInformationDataProvider.information)
                 }
             }
         }
