@@ -40,13 +40,6 @@ fun ExpositionsDetailFunction(
                 .height(150.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(8.dp))
-
-/*            Image(
-                painter = painterResource(id = exposition.imageResource),
-                contentDescription = null,
-                modifier = imageModifier,
-                contentScale = ContentScale.Crop
-            )*/
             MaterialTheme {
                 Surface {
                     ImageCarousel(images = exposition.imageResource)

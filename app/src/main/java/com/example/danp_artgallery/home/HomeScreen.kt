@@ -2,12 +2,16 @@ package com.example.danp_artgallery.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.model.DataProvider
@@ -33,6 +37,22 @@ fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavCo
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
+                    Box (
+                        modifier = Modifier
+                            .padding(10.dp),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Text(
+                            text = "CURRENT EXPOSITIONS",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 24.sp
+                            ),
+
+                        )
+                    }
+
                     val expositions = DataProvider.expositionList
                     ExpositionList(
                         expositionList = expositions,
