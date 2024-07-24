@@ -25,7 +25,7 @@ import com.example.danp_artgallery.data.model.PaintDataProvider
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 @Composable
-fun PaintsDetailFunction(paint: PaintAttributes) {
+fun PaintDetail(paint: PaintAttributes) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
@@ -97,18 +97,18 @@ fun PaintsDetailFunction(paint: PaintAttributes) {
 fun PaintDetailView(paint: PaintAttributes) {
     LazyColumn {
         item {
-            PaintsDetailFunction(paint = paint)
+            PaintDetail(paint = paint)
         }
     }
 }
 
 @Preview
 @Composable
-fun PaintPreview(){
+fun PaintDetailPreview(){
     DANP_ArtGalleryTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            PaintsDetailFunction(PaintDataProvider.paint)
+            PaintDetailView(PaintDataProvider.paint)
         }
     }
-
 }
+

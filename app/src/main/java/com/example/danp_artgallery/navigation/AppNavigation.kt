@@ -24,6 +24,7 @@ import com.example.danp_artgallery.beacon.BeaconScreen
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
+import com.example.danp_artgallery.screens.views.PaintDetailScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.settings.SettingScreen
 
@@ -96,6 +97,9 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
 
             composable(route = Screens.BeaconScreen.name){
                 BeaconScreen(context, lifecycleOwner, navController)
+            }
+            composable(route = Screens.PaintDetailScreen.name) {
+                PaintDetailScreen(navController = navController)
             }
             composable(route = "${
                     Screens.ExpositionDetailScreen.name

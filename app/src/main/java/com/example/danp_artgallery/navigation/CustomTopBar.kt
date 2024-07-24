@@ -8,6 +8,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,12 +29,12 @@ fun CustomTopBar(navController: NavController) {
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.arrow), // Reemplaza 'arrow' con el ID de tu imagen de flecha
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowLeft,
             contentDescription = "flecha",
             modifier = Modifier
                 .padding(start = 16.dp) // Añade padding al lado izquierdo
-                .size(50.dp)
+                .size(70.dp)
                 .clickable {
                     navController.popBackStack() // Regresa a la vista anterior
                 }
@@ -46,12 +51,12 @@ fun CustomTopBar(navController: NavController) {
 
         Spacer(modifier = Modifier.weight(1f)) // Espacio flexible para empujar el ícono de configuración a la derecha
 
-        Image(
-            painter = painterResource(id = R.drawable.settings_img), // Reemplaza 'settings_img' con el ID de tu ícono de configuración
+        Icon(
+            imageVector = Icons.Default.Settings,
             contentDescription = "configuración",
             modifier = Modifier
                 .padding(end = 16.dp) // Añade padding al lado derecho
-                .size(50.dp)
+                .size(40.dp)
                 .clickable {
                     navController.navigate(Screens.SettingScreen.name) // Navega a InfoScreen
                 }
@@ -71,15 +76,15 @@ fun CustomTopBarHome(navController: NavController) {
             contentDescription = "logo",
             modifier = Modifier
                 .size(50.dp)
-                .align(Alignment.Center) // Centra el logo en la vista
+                .align(Alignment.Center)
         )
 
-        Image(
-            painter = painterResource(id = R.drawable.settings_img),
+        Icon(
+            imageVector = Icons.Default.Settings,
             contentDescription = "configuración",
             modifier = Modifier
                 .padding(end = 16.dp)
-                .size(50.dp)
+                .size(40.dp)
                 .align(Alignment.CenterEnd) // Alinea el ícono de configuración a la derecha
                 .clickable {
                     navController.navigate(Screens.SettingScreen.name)

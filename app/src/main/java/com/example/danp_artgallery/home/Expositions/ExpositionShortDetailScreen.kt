@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.home
+package com.example.danp_artgallery.home.Expositions
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,9 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.data.model.ExpositionAttributes
-import com.example.danp_artgallery.data.model.PaintDataProvider
-import com.example.danp_artgallery.screens.views.PaintsDetailFunction
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 @Composable
@@ -31,14 +30,13 @@ fun ExpositionShortDetailScreen(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { navigateToExpositionDetail(exposition.title)}
+                .clickable { navigateToExpositionDetail(exposition.title) }
         ) {
             MaterialTheme {
                 Surface {
                     ImageCarousel(
                         images = exposition.imageResource,
-                        contentPadding = PaddingValues(horizontal = 4.dp),
-
+                        navController = rememberNavController()
                         )
                 }
             }

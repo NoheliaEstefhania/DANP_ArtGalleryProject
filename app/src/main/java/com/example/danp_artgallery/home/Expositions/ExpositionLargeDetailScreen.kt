@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.data.model.ExpositionDataProvider
-import com.example.danp_artgallery.home.ImageCarousel
+import com.example.danp_artgallery.home.Expositions.ImageCarousel
 import com.example.danp_artgallery.navigation.CustomTopBar
 
 @Composable
@@ -54,7 +54,7 @@ fun ExpositionLargeDetailScreen(expositionTitle: String, navController: NavContr
                         MaterialTheme {
                             Surface {
                                 ImageCarousel(images = exposition.imageResource,
-                                    contentPadding = PaddingValues(horizontal = 4.dp)
+                                    navController = navController
                                 )
                             }
                         }

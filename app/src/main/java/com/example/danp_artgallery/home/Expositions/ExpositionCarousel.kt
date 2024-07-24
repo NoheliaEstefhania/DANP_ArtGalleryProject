@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.home
+package com.example.danp_artgallery.home.Expositions
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -11,16 +11,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.R
+import com.example.danp_artgallery.navigation.Screens
+import com.example.danp_artgallery.screens.views.PaintDetailScreen
 import kotlinx.coroutines.launch
 
 @Composable
-fun ImageCarousel(images: List<Int>, contentPadding: PaddingValues) {
+fun ImageCarousel(images: List<Int>, navController: NavController) {
     var currentIndex by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -56,20 +59,26 @@ fun ImageCarousel(images: List<Int>, contentPadding: PaddingValues) {
                     Box(
                         modifier = Modifier
                             .size(width = 150.dp, height = 150.dp)
-                            .border(5.dp,
+                            .border(
+                                5.dp,
                                 MaterialTheme.colorScheme.background,
                                 shape = RoundedCornerShape(12.dp)
                             )
-
-                            .clickable{}
-
+                           /* .clickable {
+                                navController.navigate(Screens.PaintDetailScreen.name)
+                            }*/
                     ) {
                         Image(
                             painter = painterResource(id = images[index]),
                             contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
+                            /* .clickable {
+                                     navController.navigate(Screens.PaintDetailScreen.name)
+                             }*/
                         )
                     }
+
                 }
             }
         }
@@ -86,7 +95,7 @@ fun CarouselPreview() {
 
     MaterialTheme {
         Surface {
-            ImageCarousel(images = images, contentPadding = PaddingValues(horizontal = 4.dp))
+            ImageCarousel(images = images, navController = rememberNavController())
         }
     }
 }

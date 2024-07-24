@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.danp_artgallery.data.model.ExpositionDataProvider
+import com.example.danp_artgallery.home.Expositions.ExpositionList
 import com.example.danp_artgallery.navigation.CustomTopBarHome
 
 @Composable
