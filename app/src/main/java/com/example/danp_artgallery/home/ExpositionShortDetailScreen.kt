@@ -1,6 +1,5 @@
-package com.example.danp_artgallery.screens.section
+package com.example.danp_artgallery.home
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,14 +11,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.data.model.ExpositionAttributes
-import com.example.danp_artgallery.screens.views.ImageCarousel
 
 @Composable
-fun ExpositionsDetailFunction(
+fun ExpositionShortDetailScreen(
     exposition: ExpositionAttributes,
     navigateToExpositionDetail: (String) -> Unit
 ) {
@@ -38,6 +34,7 @@ fun ExpositionsDetailFunction(
                 Surface {
                     ImageCarousel(
                         images = exposition.imageResource,
+                        contentPadding = PaddingValues(horizontal = 4.dp),
 
                         )
                 }
@@ -59,7 +56,7 @@ fun ExpositionList(
 ) {
     LazyColumn {
         items(expositionList) { item ->
-            ExpositionsDetailFunction(
+            ExpositionShortDetailScreen(
                 exposition = item,
                 navigateToExpositionDetail = navigateToExpositionDetail
             )

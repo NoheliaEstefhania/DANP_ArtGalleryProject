@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.danp_artgallery.data.model.ExpositionDataProvider
 import com.example.danp_artgallery.navigation.CustomTopBarHome
-import com.example.danp_artgallery.screens.section.ExpositionList
 
 @Composable
 fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavController) {
@@ -48,6 +47,7 @@ fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavCo
                     }
 
                     val expositions = ExpositionDataProvider.expositionList
+
                     ExpositionList(
                         expositionList = expositions,
                         navigateToExpositionDetail = navigateToExpositionDetail

@@ -17,10 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.danp_artgallery.data.model.ArtGalleryInformationAttributes
 import com.example.danp_artgallery.data.model.ArtGalleryInformationDataProvider
 import com.example.danp_artgallery.navigation.CustomTopBar
-import com.example.danp_artgallery.screens.section.InformationDetailView
 
 
 @Composable

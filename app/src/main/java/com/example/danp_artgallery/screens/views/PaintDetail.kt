@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.screens.section
+package com.example.danp_artgallery.screens.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.data.model.PaintAttributes
 import com.example.danp_artgallery.data.model.PaintDataProvider
+import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 @Composable
 fun PaintsDetailFunction(paint: PaintAttributes) {
@@ -104,5 +105,10 @@ fun PaintDetailView(paint: PaintAttributes) {
 @Preview
 @Composable
 fun PaintPreview(){
-    PaintsDetailFunction(PaintDataProvider.paint)
+    DANP_ArtGalleryTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            PaintsDetailFunction(PaintDataProvider.paint)
+        }
+    }
+
 }

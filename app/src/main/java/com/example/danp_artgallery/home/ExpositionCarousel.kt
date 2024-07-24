@@ -1,4 +1,4 @@
-package com.example.danp_artgallery.screens.views
+package com.example.danp_artgallery.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -16,7 +16,7 @@ import com.example.danp_artgallery.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun ImageCarousel(images: List<Int>) {
+fun ImageCarousel(images: List<Int>, contentPadding: PaddingValues) {
     var currentIndex by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -73,7 +73,7 @@ fun CarouselPreview() {
 
     MaterialTheme {
         Surface {
-            ImageCarousel(images = images)
+            ImageCarousel(images = images, contentPadding = PaddingValues(horizontal = 4.dp))
         }
     }
 }

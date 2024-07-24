@@ -1,9 +1,10 @@
-package com.example.danp_artgallery.screens.section
+package com.example.danp_artgallery.info
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,9 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.data.model.ArtGalleryInformationAttributes
 import com.example.danp_artgallery.data.model.ArtGalleryInformationDataProvider
+import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 @Composable
-fun InfoDetailFunction(information: ArtGalleryInformationAttributes) {
+fun InformationDetail(information: ArtGalleryInformationAttributes) {
     Surface(
         shape = RoundedCornerShape(8.dp),
         tonalElevation = 8.dp,
@@ -56,13 +58,17 @@ fun InfoDetailFunction(information: ArtGalleryInformationAttributes) {
 fun InformationDetailView(artGallery: ArtGalleryInformationAttributes) {
     LazyColumn {
         item {
-            InfoDetailFunction(information = artGallery)
+            InformationDetail(information = artGallery)
         }
     }
 }
 
 @Preview
 @Composable
-fun InfoPreview() {
-    InfoDetailFunction(ArtGalleryInformationDataProvider.information)
+fun InformationDetailPreview() {
+    DANP_ArtGalleryTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            InformationDetail(ArtGalleryInformationDataProvider.information)
+        }
+    }
 }

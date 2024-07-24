@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.navigation
 
+import ExpositionLargeDetailScreen
 import android.content.Context
 import android.os.Build
 import androidx.activity.ComponentActivity
@@ -23,7 +24,6 @@ import com.example.danp_artgallery.beacon.BeaconScreen
 import com.example.danp_artgallery.home.HomeScreen
 import com.example.danp_artgallery.info.InfoScreen
 import com.example.danp_artgallery.map.CityMapScreen
-import com.example.danp_artgallery.screens.views.ExpositionDetailScreen
 import com.example.danp_artgallery.search.SearchScreen
 import com.example.danp_artgallery.settings.SettingScreen
 
@@ -104,7 +104,7 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                         "expositionTitle"
                     )
                     if (expositionTitle != null) {
-                        ExpositionDetailScreen(expositionTitle = expositionTitle)
+                        ExpositionLargeDetailScreen(expositionTitle = expositionTitle, navController = rememberNavController())
                     }
             }
         }
