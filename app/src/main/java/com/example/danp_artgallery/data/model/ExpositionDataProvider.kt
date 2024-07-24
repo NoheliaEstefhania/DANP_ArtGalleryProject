@@ -5,7 +5,7 @@ import com.example.danp_artgallery.R
 object ExpositionDataProvider {
     val expositionList = listOf(
         ExpositionAttributes(
-            imageResource = listOf(R.drawable.carousel01, R.drawable.carousel02, R.drawable.carousel03 ) ,
+            imageResource = listOf(R.drawable.carousel02, R.drawable.carousel04, R.drawable.carousel01, R.drawable.carousel02, R.drawable.carousel03 ) ,
             title = "CARPINTERO DE NIDOS",
             expositions = listOf(
                 "De los hijos que se van. Daniel Gallegos. Daniel Gallegos. " +

@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.data.model.ExpositionAttributes
+import com.example.danp_artgallery.data.model.PaintDataProvider
+import com.example.danp_artgallery.screens.views.PaintsDetailFunction
+import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 @Composable
 fun ExpositionShortDetailScreen(
@@ -28,7 +31,7 @@ fun ExpositionShortDetailScreen(
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .clickable { navigateToExpositionDetail(exposition.title) }
+                .clickable { navigateToExpositionDetail(exposition.title)}
         ) {
             MaterialTheme {
                 Surface {
@@ -41,7 +44,10 @@ fun ExpositionShortDetailScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = exposition.title, style = typography.titleSmall)
+            Text(text = exposition.title,
+                style = typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
 
             for (item in exposition.expositions) {
                 Text(text = item, style = typography.bodySmall)
@@ -56,10 +62,14 @@ fun ExpositionList(
 ) {
     LazyColumn {
         items(expositionList) { item ->
-            ExpositionShortDetailScreen(
-                exposition = item,
-                navigateToExpositionDetail = navigateToExpositionDetail
-            )
+            DANP_ArtGalleryTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    ExpositionShortDetailScreen(
+                        exposition = item,
+                        navigateToExpositionDetail = navigateToExpositionDetail
+                    )
+                }
+            }
         }
     }
 }

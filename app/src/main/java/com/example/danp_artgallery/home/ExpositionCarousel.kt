@@ -1,13 +1,17 @@
 package com.example.danp_artgallery.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +27,7 @@ fun ImageCarousel(images: List<Int>, contentPadding: PaddingValues) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(170.dp)
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
                     change.consume()
@@ -41,22 +45,31 @@ fun ImageCarousel(images: List<Int>, contentPadding: PaddingValues) {
     ) {
         LazyRow(
             modifier = Modifier
-                .fillMaxSize()
+                //.fillMaxSize()
         ) {
             items(images.size) { index ->
                 Column(
                     modifier = Modifier
-                        .fillParentMaxWidth()
-                        .height(200.dp)
+                        //.height(500.dp)
                         .padding(8.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = images[index]),
-                        contentDescription = null,
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f)
-                    )
+                            .size(width = 150.dp, height = 150.dp)
+                            .border(5.dp,
+                                MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+
+                            .clickable{}
+
+                    ) {
+                        Image(
+                            painter = painterResource(id = images[index]),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
                 }
             }
         }
@@ -66,9 +79,9 @@ fun ImageCarousel(images: List<Int>, contentPadding: PaddingValues) {
 @Composable
 fun CarouselPreview() {
     val images = listOf(
-        R.drawable.ccunsa,
-        R.drawable.carpintero_nidos,
-        R.drawable.ccunsalocal,
+        R.drawable.carousel01,
+        R.drawable.carousel02,
+        R.drawable.carousel03,
     )
 
     MaterialTheme {

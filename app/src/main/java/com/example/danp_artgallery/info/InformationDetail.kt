@@ -43,9 +43,13 @@ fun InformationDetail(information: ArtGalleryInformationAttributes) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(text = information.title, style = typography.titleSmall)
-            Text(text= information.detail, style = typography.titleSmall)
-            Text(text=information.direction, style = typography.titleSmall)
+            Text(text = information.title,
+                style = typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+
+                )
+            Text(text= information.detail, style = typography.bodyMedium)
+            Text(text=information.direction, style = typography.bodySmall)
 
             for (item in information.information) {
                 Text(text = item, style = typography.bodySmall)
@@ -58,8 +62,11 @@ fun InformationDetail(information: ArtGalleryInformationAttributes) {
 fun InformationDetailView(artGallery: ArtGalleryInformationAttributes) {
     LazyColumn {
         item {
-            InformationDetail(information = artGallery)
-        }
+            DANP_ArtGalleryTheme {
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    InformationDetail(ArtGalleryInformationDataProvider.information)
+                }
+            }        }
     }
 }
 
