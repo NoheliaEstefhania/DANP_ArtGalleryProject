@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,8 +33,7 @@ import org.altbeacon.beacon.MonitorNotifier
 @Composable
 fun BeaconScan(
     context: Context,
-    lifecycleOwner: ComponentActivity,
-    paddingValues: PaddingValues
+    lifecycleOwner: ComponentActivity
 ) {
     val serviceStatus = remember {
         mutableStateOf(BeaconGalleryService.isActive)

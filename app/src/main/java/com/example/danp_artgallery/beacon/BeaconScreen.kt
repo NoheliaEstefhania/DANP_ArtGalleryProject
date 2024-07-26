@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +33,7 @@ private const val title = "BEACON"
 fun BeaconList(beacons: List<String>) {
     LazyColumn {
         items(beacons) { beaconInfo  ->
-            Text(text = beaconInfo, style = typography.bodySmall)
+            Text(text = beaconInfo, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -75,7 +74,7 @@ fun BeaconScreen(
         },
         content = { paddingValues ->
             if (allPermissionGroupsGranted(context, permissionGroups)) {
-                BeaconScan(context = context, lifecycleOwner, paddingValues)
+                BeaconScan(context = context, lifecycleOwner)
             } else {
                 BeaconScanPermissionsScreen(navController)
             }
