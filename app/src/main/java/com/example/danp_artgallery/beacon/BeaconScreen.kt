@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,7 +44,7 @@ fun BeaconList(beacons: List<String>) {
 fun BeaconScreen(
     context: Context,
     lifecycleOwner: ComponentActivity,
-    navController: NavController
+    navController: NavController,
 ) {
     val permissionsHelper = PermissionsHelper(context)
     val permissionGroups by remember {
@@ -72,7 +73,8 @@ fun BeaconScreen(
 
             }
         },
-        content = { paddingValues ->
+        content = { paddingValues  ->
+            paddingValues.toString()
             if (allPermissionGroupsGranted(context, permissionGroups)) {
                 BeaconScan(context = context, lifecycleOwner)
             } else {
