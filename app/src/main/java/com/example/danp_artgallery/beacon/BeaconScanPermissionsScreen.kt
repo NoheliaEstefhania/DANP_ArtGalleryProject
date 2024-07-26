@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.beacon
 
+import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -52,11 +53,15 @@ fun BeaconScanPermissionsScreen(navController: NavController) {
         permissions.entries.forEach {
             val permissionName = it.key
             val isGranted = it.value
-            if (isGranted) {
-                Log.d(tag, "$permissionName permission granted: $isGranted")
-            } else {
-                Log.d(tag, "$permissionName permission denied: $isGranted")
-            }
+            Log.d(tag, "$permissionName permission granted: $isGranted")
+        }
+        if(
+            allPermissionGroupsGranted(
+                context,
+                permissionGroups = permissionGroups
+            )
+        ){
+            continueButtonEnabled.value = true
         }
     }
     Scaffold(
@@ -89,7 +94,8 @@ fun BeaconScanPermissionsScreen(navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .padding(top = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -111,18 +117,15 @@ fun BeaconScanPermissionsScreen(navController: NavController) {
                         PermissionButton(
                             permissionGroup = permissionGroup,
                             onClick = {
-                                promptForPermissions(requestPermissionLauncher, permissionGroup)
-                                if(
-                                    allPermissionGroupsGranted(
-                                        context,
-                                        permissionGroups = permissionGroups
-                                    )
-                                ){
-                                    continueButtonEnabled.value = true
-                                }
+
+                                promptForPermissions(
+                                    context,
+                                    requestPermissionLauncher,
+                                    permissionGroup
+                                )
+
                             },
                             modifier = Modifier.padding(bottom = 8.dp),
-                            enabled = !continueButtonEnabled.value
                         )
                     }
 
@@ -178,11 +181,25 @@ fun PermissionButton(
 }
 
 fun promptForPermissions(
+    context: Context,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>,
     permissionsGroup: Array<String>
 ) {
-    requestPermissionLauncher.launch(permissionsGroup)
-}
+    if (!allPermissionsGranted(context, permissionsGroup)) {
+        val firstPermission = permissionsGroup.first()
+
+        if (PermissionsHelper(context).isFirstTimeAskingPermission(firstPermission)) {
+            PermissionsHelper(context).setFirstTimeAskingPermission(firstPermission, false)
+            requestPermissionLauncher.launch(permissionsGroup)
+        }
+        else {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Can't request permission")
+            builder.setMessage("This permission has been previously denied to this app.  In order to grant it now, you must go to Android Settings to enable this permission.")
+            builder.setPositiveButton("OK", null)
+            builder.show()
+        }
+    }}
 
 fun allPermissionsGranted(context: Context, permissionsGroup: Array<String>): Boolean {
     val permissionHelper = PermissionsHelper(context)
