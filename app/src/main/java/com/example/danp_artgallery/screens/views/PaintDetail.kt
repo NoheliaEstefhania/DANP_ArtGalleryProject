@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.data.model.PaintAttributes
 import com.example.danp_artgallery.data.model.PaintDataProvider
+import com.example.danp_artgallery.data.model.Painting
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 @Composable
@@ -111,4 +112,3 @@ fun PaintDetailPreview(){
         }
     }
 }
-
