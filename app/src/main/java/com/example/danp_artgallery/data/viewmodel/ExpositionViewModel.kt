@@ -20,8 +20,8 @@ class ExpositionViewModel : ViewModel() {
     private val _selectedExposition = MutableLiveData<Exposition?>()
     val selectedExposition: LiveData<Exposition?> = _selectedExposition
 
-    private val _selectedExpositionPictures = MutableLiveData<List<Painting?>>()
-    val selectedExpositionPictures: LiveData<List<Painting?>> = _selectedExpositionPictures
+    private val _selectedExpositionPictures = MutableLiveData<Map<Int,List<Painting?>>>()
+    val selectedExpositionPictures: LiveData<Map<Int,List<Painting?>>> = _selectedExpositionPictures
 
     init {
         fetchExpositions()
@@ -41,7 +41,11 @@ class ExpositionViewModel : ViewModel() {
     fun fetchPictures(expositionId: Int) {
         viewModelScope.launch {
             try {
-                _selectedExpositionPictures.value = RetrofitClient.apiService.getPictures(expositionId)
+                //_selectedExpositionPictures.value = RetrofitClient.apiService.getPictures(expositionId)
+                val pictures = RetrofitClient.apiService.getPictures(expositionId)
+                val currentPictures = _selectedExpositionPictures.value.orEmpty().toMutableMap()
+                currentPictures[expositionId] = pictures
+                _selectedExpositionPictures.value = currentPictures
             } catch (e: Exception) {
                 // Maneja el error
                 Log.e("viewmodel","fallo en la api de pinturas")
