@@ -17,4 +17,7 @@ interface ApiService {
 
     @GET("expositions/{id}/pictures")
     suspend fun getPictures(@Path("id") id: Int): List<Painting>
+    @GET("expositions/{id}")
+    suspend fun getExpositionDetails(@Path("id") id: Int): Exposition
+
 }

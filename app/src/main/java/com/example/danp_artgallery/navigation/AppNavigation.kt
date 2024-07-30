@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.beacon.BeaconScreen
+import com.example.danp_artgallery.data.viewmodel.ExpositionViewModel
 import com.example.danp_artgallery.data.viewmodel.PaintingViewModel
 import com.example.danp_artgallery.home.Expositions.ExpositionListScreen
 import com.example.danp_artgallery.home.HomeScreen
@@ -114,17 +115,19 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                 )
             }
             composable(route = Screens.ExpositionListScreen.name) {
-                ExpositionListScreen()
-            }
-            composable(route = "${
-                    Screens.ExpositionDetailScreen.name
-                }/{expositionTitle}") { backStackEntry ->
-                    val expositionTitle = backStackEntry.arguments?.getString(
-                        "expositionTitle"
-                    )
-                    if (expositionTitle != null) {
-                        ExpositionLargeDetailScreen(expositionTitle = expositionTitle, navController = rememberNavController())
+                ExpositionListScreen(
+                    navigateToExpositionDetail = { expositionId ->
+                        navController.navigate("${Screens.ExpositionDetailScreen.name}/$expositionId")
                     }
+                )
+            }
+            composable(route = "${Screens.ExpositionDetailScreen.name}/{expositionId}") { backStackEntry ->
+                Log.d("ExpositionDetailScreen", "ExpositionDetailScreen: ${backStackEntry.arguments?.getString("expositionId")}")
+                val expositionId = backStackEntry.arguments?.getString("expositionId")?.toIntOrNull()
+                if (expositionId  != null) {
+                    val viewModel: ExpositionViewModel = viewModel()
+                    ExpositionLargeDetailScreen(viewModel = viewModel, expositionId = expositionId, navController = navController)
+                }
             }
             composable(route = "${Screens.PaintingDetailScreen.name}/{paintingId}") { backStackEntry ->
                 Log.d("PaintingDetailScreen", "PaintingDetailScreen: ${backStackEntry.arguments?.getString("paintingId")}")
