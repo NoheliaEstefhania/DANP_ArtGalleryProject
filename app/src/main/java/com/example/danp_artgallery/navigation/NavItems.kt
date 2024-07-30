@@ -44,5 +44,10 @@ val listOfNavItems : List<NavItem> = listOf(
         icon = Icons.Default.Info,
         route = Screens.PaintingListScreen.name
     ),
+    NavItem(
+        label = "Paintings",
+        icon = Icons.Default.Info,
+        route = Screens.ExpositionListScreen.name
+    ),
 )
 

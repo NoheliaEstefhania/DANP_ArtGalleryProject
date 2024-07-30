@@ -2,7 +2,7 @@ package com.example.danp_artgallery.data.model
 
 data class Painting (
     val audio: String,
-    val author: String,
+    //val author: String,
     val description: String,
     val id: Int,
     val image: String,
@@ -10,5 +10,5 @@ data class Painting (
     val location: String,
     val space: String,
     val technique: String,
-    val title: String
+    val title: String,
 )

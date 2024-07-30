@@ -11,4 +11,5 @@ enum class Screens {
     PaintingDetailScreen,
     //PaintDetailView,
     PaintingListScreen,
+    ExpositionListScreen,
 }

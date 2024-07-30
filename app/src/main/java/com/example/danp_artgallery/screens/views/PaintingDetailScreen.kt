@@ -35,7 +35,7 @@ fun PaintingDetailScreen(viewModel: PaintingViewModel, paintingId: Int) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = it.title)
-            Text(text = "Author: ${it.author}")
+            //Text(text = "Author: ${it.author}")
             Text(text = "Description: ${it.description}")
             Text(text = "Technique: ${it.technique}")
             Text(text = "Location: ${it.location}")

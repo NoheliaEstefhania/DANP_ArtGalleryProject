@@ -43,7 +43,7 @@ fun PaintingItem(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = painting.title)
-            Text(text = painting.author)
+            //Text(text = painting.author)
             Text(text = painting.description)
         }
     }

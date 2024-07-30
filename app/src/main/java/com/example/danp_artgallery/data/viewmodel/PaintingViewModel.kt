@@ -31,6 +31,17 @@ class PaintingViewModel : ViewModel() {
         }
     }
 
+    private fun fetchPictures(expositionId: Int) {
+        viewModelScope.launch {
+            try {
+                _paintings.value = RetrofitClient.apiService.getPictures(expositionId)
+            } catch (e: Exception) {
+                // Maneja el error
+                Log.e("viewmodel","fallo en la api de pinturas")
+            }
+        }
+    }
+
     fun fetchPaintingDetails(id: Int) {
         viewModelScope.launch {
             try {
