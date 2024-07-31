@@ -1,6 +1,9 @@
 package com.example.danp_artgallery.map.procedures
 
+import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.RectF
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -23,11 +26,25 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import com.example.danp_artgallery.map.models.Room
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.danp_artgallery.R
+import androidx.compose.ui.unit.DpSize
+
 
 @Composable
-fun DrawRooms(rooms: List<Room>){
+fun DrawRooms(rooms: List<Room>, context: Context) {
     var selectedRoom by remember { mutableStateOf<Room?>(null) }
-    val roomRects = remember { mutableStateListOf<RectF>()}
+    val roomRects = remember { mutableStateListOf<RectF>() }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -37,12 +54,11 @@ fun DrawRooms(rooms: List<Room>){
     }
 
     // Defining element colors
-    var lineColor = MaterialTheme.colorScheme.outline
-    var textColor = MaterialTheme.colorScheme.tertiary
+    val lineColor = MaterialTheme.colorScheme.outline
+    val textColor = MaterialTheme.colorScheme.tertiary
 
-    Canvas(modifier = Modifier
+    Box(modifier = Modifier
         .fillMaxSize()
-        .padding(horizontal = Dp(10f))
         .background(MaterialTheme.colorScheme.background)
         .pointerInput(Unit) {
             detectTapGestures { offset ->
@@ -54,61 +70,79 @@ fun DrawRooms(rooms: List<Room>){
             }
         }
     ) {
-        // Getting the limits
-        val canvasWidth = size.width
-        val canvasHeight = size.height
+        Canvas(modifier = Modifier.matchParentSize()) {
+            // Getting the limits
+            val canvasWidth = size.width
+            val canvasHeight = size.height
 
-        if (selectedRoom == null){
-            // Getting room coordinates limits
-            val (minX, minY, maxX, maxY) = findRoomBounds(rooms)
+            if (selectedRoom == null) {
+                // Getting room coordinates limits
+                val (minX, minY, maxX, maxY) = findRoomBounds(rooms)
 
-            // Calculating the scale
-            val scaleX = canvasWidth / (maxX - minX)
-            val scaleY = canvasHeight / (maxY - minY)
-            val scale = minOf(scaleX, scaleY) // Getting the less value
+                // Calculating the scale
+                val scaleX = canvasWidth / (maxX - minX)
+                val scaleY = canvasHeight / (maxY - minY)
+                val scale = minOf(scaleX, scaleY) // Getting the less value
 
-            // Calculating the offset to center
-            val offsetX = (canvasWidth - (maxX - minX) * scale) / 2 - minX * scale
-            val offsetY = (canvasHeight - (maxY - minY) * scale) / 2 - minY * scale
+                // Calculating the offset to center
+                val offsetX = (canvasWidth - (maxX - minX) * scale) / 2 - minX * scale
+                val offsetY = (canvasHeight - (maxY - minY) * scale) / 2 - minY * scale
 
-            // Line thickness
-            val lineWidth = Dp(2f).toPx()
+                // Line thickness
+                val lineWidth = Dp(2f).toPx()
 
-            roomRects.clear() // Clear previous rectangles
+                roomRects.clear() // Clear previous rectangles
 
-            // Drawing the rooms
-            for (room in rooms) {
-                drawRoom(room, scale, offsetX, offsetY, lineWidth, roomRects, lineColor, textColor)
+                // Drawing the rooms
+                for (room in rooms) {
+                    drawRoom(
+                        room,
+                        scale,
+                        offsetX,
+                        offsetY,
+                        lineWidth,
+                        roomRects,
+                        lineColor,
+                        textColor)
+                }
+            } else {
+                // Draw only the selected room
+                val (minX, minY, maxX, maxY) = findRoomBounds(listOf(selectedRoom!!))
+
+                // Calculating the scale to fit the canvas
+                val scaleX = canvasWidth / (maxX - minX)
+                val scaleY = canvasHeight / (maxY - minY)
+                val scale = minOf(scaleX, scaleY) // Getting the less value
+
+                // Calculating the offset to center
+                val offsetX = (canvasWidth - (maxX - minX) * scale) / 2 - minX * scale
+                val offsetY = (canvasHeight - (maxY - minY) * scale) / 2 - minY * scale
+
+                // Line thickness
+                val lineWidth = Dp(2f).toPx()
+
+                drawRoom(
+                    selectedRoom!!,
+                    scale,
+                    offsetX,
+                    offsetY,
+                    lineWidth,
+                    roomRects,
+                    lineColor,
+                    textColor
+                )
+                drawImageAroundRoom(
+                    selectedRoom!!,
+                    scale,
+                    offsetX,
+                    offsetY,
+                    context
+                )
             }
-        } else {
-            // Draw only the selected room
-            val (minX, minY, maxX, maxY) = findRoomBounds(listOf(selectedRoom!!))
-
-            // Calculating the scale to fit the canvas
-            val scaleX = canvasWidth / (maxX - minX)
-            val scaleY = canvasHeight / (maxY - minY)
-            val scale = minOf(scaleX, scaleY) // Getting the less value
-
-            // Calculating the offset to center
-            val offsetX = (canvasWidth - (maxX - minX) * scale) / 2 - minX * scale
-            val offsetY = (canvasHeight - (maxY - minY) * scale) / 2 - minY * scale
-
-            // Line thickness
-            val lineWidth = Dp(2f).toPx()
-
-            drawRoom(
-                selectedRoom!!,
-                scale,
-                offsetX,
-                offsetY,
-                lineWidth,
-                roomRects,
-                lineColor,
-                textColor
-            )
         }
     }
 }
+
 
 // General class bounds
 data class Bounds(val minX: Float, val minY: Float, val maxX: Float, val maxY: Float)
@@ -169,5 +203,62 @@ fun DrawScope.drawRoom(
     )
 
     // Store the rectangle bounds
-    roomRects.add(RectF(points[0].x, points[0].y, points[2].x, points[2].y))
+    roomRects.add(
+        RectF(
+            points[0].x,
+            points[0].y,
+            points[2].x,
+            points[2].y)
+    )
 }
+
+fun DrawScope.drawImageAroundRoom(
+    room: Room,
+    scale: Float,
+    offsetX: Float,
+    offsetY: Float,
+    context: Context
+) {
+    // Cargar la imagen desde los recursos
+    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.carousel01)
+
+    val points = room.points.map { point ->
+        Offset(
+            x = point.x * scale + offsetX,
+            y = point.y * scale + offsetY
+        )
+    }
+
+    val imageSize = Dp(1f).toPx().toInt() // Tamaño de la imagen
+
+    // Dibujar la imagen en las cuatro esquinas de la sala
+    drawIntoCanvas { canvas ->
+        val paint = android.graphics.Paint()
+        canvas.nativeCanvas.drawBitmap(
+            bitmap,
+            points[0].x - imageSize,
+            points[0].y - imageSize,
+            paint
+        )
+        canvas.nativeCanvas.drawBitmap(
+            bitmap,
+            points[1].x,
+            points[1].y - imageSize,
+            paint
+        )
+        canvas.nativeCanvas.drawBitmap(
+            bitmap,
+            points[2].x,
+            points[2].y,
+            paint
+        )
+        canvas.nativeCanvas.drawBitmap(
+            bitmap,
+            points[3].x - imageSize,
+            points[3].y,
+            paint
+        )
+    }
+}
+
+
