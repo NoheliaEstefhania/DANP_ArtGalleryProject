@@ -68,9 +68,9 @@ fun GalleryMapScreen(context: Context?,navController: NavController){
                     jsonString?.let {
                         // Parsing room data
                         val rooms = parseRoomsFromJSON(it).rooms
-                        DrawRooms(rooms = rooms)
+                        DrawRooms(rooms = rooms, context = context)
                     } ?: run {
-                        DrawRooms(rooms = emptyList())
+                        DrawRooms(rooms = emptyList(), context = context)
                     }
                 }
             }
