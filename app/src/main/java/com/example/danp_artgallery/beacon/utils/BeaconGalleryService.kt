@@ -38,7 +38,7 @@ class BeaconGalleryService : Service() {
         beaconManager.beaconParsers.add(
             parser)
         setupBeaconScanning()
-
+        isActive = true
         return START_STICKY
     }
 
@@ -46,7 +46,11 @@ class BeaconGalleryService : Service() {
         super.onDestroy()
         val beaconManager = BeaconManager.getInstanceForApplication(this)
         beaconManager.stopMonitoring(region)
+        isMonitoring = false
         beaconManager.stopRangingBeacons(region)
+        beaconManager.disableForegroundServiceScanning()
+        isRanging = false
+        isActive = false
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -85,7 +89,9 @@ class BeaconGalleryService : Service() {
 
         // The code below will start "monitoring" for beacons matching the region definition at the top of this file
         beaconManager.startMonitoring(region)
+        isMonitoring = true
         beaconManager.startRangingBeacons(region)
+        isRanging = true
         // These two lines set up a Live Data observer so this Activity can get beacon data from the Application class
         val regionViewModel = BeaconManager.getInstanceForApplication(
             this
@@ -175,6 +181,9 @@ class BeaconGalleryService : Service() {
     }
 
     companion object {
+        var isActive = false
+        var isRanging = false
+        var isMonitoring = false
         var region = Region("all-beacons", null, null, null)
         const val TAG = "BeaconService"
     }
