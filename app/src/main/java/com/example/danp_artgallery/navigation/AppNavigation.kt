@@ -136,7 +136,7 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                 val paintingId = backStackEntry.arguments?.getString("paintingId")?.toIntOrNull()
                 if (paintingId != null) {
                     val viewModel: PaintingViewModel = viewModel()
-                    PaintingDetailScreen(viewModel = viewModel, paintingId = paintingId)
+                    PaintingDetailScreen(viewModel = viewModel, paintingId = paintingId, navController = navController)
                 }
             }
         }
