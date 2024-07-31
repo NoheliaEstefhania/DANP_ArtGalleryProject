@@ -34,10 +34,11 @@ fun ExpositionShortDetailScreen(
         ) {
             MaterialTheme {
                 Surface {
-                    ImageCarousel(
+                    /*ImageCarousel(
                         images = exposition.imageResource,
                         navController = rememberNavController()
                         )
+                    */
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))

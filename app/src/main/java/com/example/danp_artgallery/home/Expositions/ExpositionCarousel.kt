@@ -11,19 +11,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.example.danp_artgallery.R
 import com.example.danp_artgallery.navigation.Screens
-import com.example.danp_artgallery.screens.views.PaintDetailScreen
 import kotlinx.coroutines.launch
 
 @Composable
-fun ImageCarousel(images: List<Int>, navController: NavController) {
+fun ImageCarousel(
+    imageUrls: List<String>,
+    navController: NavController,
+    onImageClick: (String) -> Unit
+) {
     var currentIndex by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,7 +42,7 @@ fun ImageCarousel(images: List<Int>, navController: NavController) {
                         coroutineScope.launch {
                             currentIndex -= 1
                         }
-                    } else if (dragAmount < 0 && currentIndex < images.size - 1) {
+                    } else if (dragAmount < 0 && currentIndex < imageUrls.size - 1) {
                         coroutineScope.launch {
                             currentIndex += 1
                         }
@@ -48,60 +52,34 @@ fun ImageCarousel(images: List<Int>, navController: NavController) {
     ) {
         LazyRow(
             modifier = Modifier
-                //.fillMaxSize()
+                .fillMaxSize()
         ) {
-            items(images.size) { index ->
+            items(imageUrls.size) { index ->
                 Column(
                     modifier = Modifier
-                        //.height(500.dp)
                         .padding(8.dp)
+                        .size(width = 150.dp, height = 150.dp)
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(width = 150.dp, height = 150.dp)
+                            .fillMaxSize()
                             .border(
                                 5.dp,
                                 MaterialTheme.colorScheme.background,
                                 shape = RoundedCornerShape(12.dp)
                             )
-                           /* .clickable {
-                                navController.navigate(Screens.PaintDetailScreen.name)
-                            }*/
+                            .clickable {
+                                onImageClick(imageUrls[index])
+                            }
                     ) {
                         Image(
-                            painter = painterResource(id = images[index]),
+                            painter = rememberImagePainter(imageUrls[index]),
                             contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxSize()
-                            /* .clickable {
-                                     navController.navigate(Screens.PaintDetailScreen.name)
-                             }*/
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
-
                 }
             }
         }
     }
-}
-
-@Composable
-fun CarouselPreview() {
-    val images = listOf(
-        R.drawable.carousel01,
-        R.drawable.carousel02,
-        R.drawable.carousel03,
-    )
-
-    MaterialTheme {
-        Surface {
-            ImageCarousel(images = images, navController = rememberNavController())
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCarousel() {
-    CarouselPreview()
 }

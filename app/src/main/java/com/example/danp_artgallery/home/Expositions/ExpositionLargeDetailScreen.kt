@@ -1,19 +1,38 @@
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.danp_artgallery.data.model.ExpositionDataProvider
+import coil.compose.rememberImagePainter
+import com.example.danp_artgallery.data.viewmodel.ExpositionViewModel
 import com.example.danp_artgallery.home.Expositions.ImageCarousel
 import com.example.danp_artgallery.navigation.CustomTopBar
+import com.example.danp_artgallery.navigation.Screens
 
 @Composable
-fun ExpositionLargeDetailScreen(expositionTitle: String, navController: NavController) {
-    val exposition = ExpositionDataProvider.getExpositionByTitle(expositionTitle)
+fun ExpositionLargeDetailScreen(
+    viewModel: ExpositionViewModel,
+    expositionId: Int,
+    navController: NavController
+) {
+
+    LaunchedEffect(Unit) {
+        Log.d("ExpositionLargeDetailScreen", "Fetching details for exposition ID: $expositionId")
+        viewModel.fetchExpositionDetails(expositionId)
+        viewModel.fetchPictures(expositionId)
+    }
+    val expositionDetails by viewModel.selectedExposition.observeAsState()
+    val fetchedPictures by viewModel.selectedExpositionPictures.observeAsState(emptyMap())
+    val images = fetchedPictures[expositionId] ?: emptyList()
 
     Scaffold(
         topBar = {
@@ -26,13 +45,15 @@ fun ExpositionLargeDetailScreen(expositionTitle: String, navController: NavContr
                 CustomTopBar(navController = navController)
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = expositionTitle,
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                expositionDetails?.let {
+                    Text(
+                        text = it.name ?: "No name available",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -45,27 +66,33 @@ fun ExpositionLargeDetailScreen(expositionTitle: String, navController: NavContr
                     .padding(paddingValues),
                 contentAlignment = Alignment.TopCenter
             ) {
-                exposition?.let {
+                expositionDetails?.let {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
 
                     ) {
 
-                        MaterialTheme {
-                            Surface {
-                                ImageCarousel(images = exposition.imageResource,
-                                    navController = navController
-                                )
-                            }
+                        if (images.isNotEmpty()) {
+                            ImageCarousel(
+                                imageUrls = images.map { it!!.image_min },
+                                navController = navController,
+                                onImageClick = { imageUrl ->
+                                    val paintingId = images.find { it!!.image_min == imageUrl }?.id
+                                    paintingId?.let {
+                                        navController.navigate("${Screens.PaintingDetailScreen.name}/$it")
+                                    }
+                                }
+                            )
+                        } else {
+                            Text(text = "No images available")
                         }
-
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        it.expositions.forEach { detail ->
-                            Text(text = detail,
+                        Text(
+                            text = it.description,
                             modifier = Modifier.padding(horizontal = 24.dp)
-                            )
-                        }
+                        )
+
                     }
                 } ?: run {
                     Text(text = "Exposition not found")
@@ -73,14 +100,4 @@ fun ExpositionLargeDetailScreen(expositionTitle: String, navController: NavContr
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewExpositionDetailScreen() {
-    MaterialTheme {
-        Surface {
-            ExpositionLargeDetailScreen(expositionTitle = "CARPINTERO DE NIDOS", navController = rememberNavController())
-        }
-    }
 }

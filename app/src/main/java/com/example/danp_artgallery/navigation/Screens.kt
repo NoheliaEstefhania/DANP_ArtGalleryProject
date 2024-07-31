@@ -8,5 +8,8 @@ enum class Screens {
     BeaconScreen,
     ExpositionDetailScreen,
     SettingScreen,
-    PaintDetailScreen,
+    PaintingDetailScreen,
+    //PaintDetailView,
+    PaintingListScreen,
+    ExpositionListScreen,
 }
