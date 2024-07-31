@@ -119,6 +119,7 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                     navigateToExpositionDetail = { expositionId ->
                         navController.navigate("${Screens.ExpositionDetailScreen.name}/$expositionId")
                     }
+                    , navController = navController
                 )
             }
             composable(route = "${Screens.ExpositionDetailScreen.name}/{expositionId}") { backStackEntry ->

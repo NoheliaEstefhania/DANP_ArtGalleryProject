@@ -25,33 +25,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.danp_artgallery.data.model.Painting
 import com.example.danp_artgallery.data.viewmodel.ExpositionViewModel
 import com.example.danp_artgallery.data.viewmodel.PaintingViewModel
+import com.example.danp_artgallery.navigation.Screens
 import com.example.danp_artgallery.ui.theme.DANP_ArtGalleryTheme
 
 
 @Composable
 fun ExpositionListScreen(
     viewModel: ExpositionViewModel = viewModel(),
-    navigateToExpositionDetail: (Int) -> Unit
+    navigateToExpositionDetail: (Int) -> Unit,
+    navController: NavController
 ) {
     val expositions by viewModel.expositions.observeAsState(emptyList())
-
-    /*Scaffold() { paddingValues ->
-        LazyColumn(
-            contentPadding = paddingValues,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(expositions) { exposition ->
-                ExpositionItem(exposition = exposition, onClick = {
-                    Log.d("PaintingListScreen", "Clicked on painting ID: ${exposition.id}")
-                    navigateToExpositionDetail(exposition.id)
-                })
-            }
-        }
-    }*/
 
     LazyColumn(
         contentPadding = PaddingValues(8.dp)
@@ -78,18 +67,20 @@ fun ExpositionListScreen(
                         modifier = Modifier
                             .padding(16.dp)
                     ) {
-                        // Aquí puedes incluir un componente de imagen si lo tienes
-                        // Por ejemplo, puedes añadir un ImageCarousel si es necesario
-                        // Fetch images for this exposition
-                        //val images by viewModel.selectedExpositionPictures.observeAsState(emptyList())
+
                         val imageUrls = images.value.map { it.image_min ?: "no image" }
                         Log.d("ExpositionListScreen", "Exposition ID: ${exposition.id}, Images: ${imageUrls.size}")
-                        //.observeAsState(emptyList())
-                        //Log.d("ExpositionListScreen", "Exposition ID: ${exposition.id}, Images: ${images.size}")
+
                         if (imageUrls.isNotEmpty()) {
                             ImageCarousel(
                                 imageUrls = imageUrls,
-                                navController = rememberNavController() // Update this if you have a different navigation setup
+                                navController = rememberNavController(),
+                                onImageClick = { imageUrl ->
+                                    val paintingId = images.value.find { it.image_min == imageUrl }?.id
+                                    paintingId?.let {
+                                        navController.navigate("${Screens.PaintingDetailScreen.name}/$it")
+                                    }
+                                }
                             )
                         } else {
                             Text(text = "No images available")

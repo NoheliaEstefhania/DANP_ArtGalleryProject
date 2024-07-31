@@ -16,15 +16,23 @@ import coil.compose.rememberImagePainter
 import com.example.danp_artgallery.data.viewmodel.ExpositionViewModel
 import com.example.danp_artgallery.home.Expositions.ImageCarousel
 import com.example.danp_artgallery.navigation.CustomTopBar
+import com.example.danp_artgallery.navigation.Screens
 
 @Composable
-fun ExpositionLargeDetailScreen(viewModel: ExpositionViewModel , expositionId: Int, navController: NavController) {
+fun ExpositionLargeDetailScreen(
+    viewModel: ExpositionViewModel,
+    expositionId: Int,
+    navController: NavController
+) {
 
     LaunchedEffect(Unit) {
         Log.d("ExpositionLargeDetailScreen", "Fetching details for exposition ID: $expositionId")
         viewModel.fetchExpositionDetails(expositionId)
+        viewModel.fetchPictures(expositionId)
     }
     val expositionDetails by viewModel.selectedExposition.observeAsState()
+    val fetchedPictures by viewModel.selectedExpositionPictures.observeAsState(emptyMap())
+    val images = fetchedPictures[expositionId] ?: emptyList()
 
     Scaffold(
         topBar = {
@@ -64,17 +72,22 @@ fun ExpositionLargeDetailScreen(viewModel: ExpositionViewModel , expositionId: I
 
                     ) {
 
-                        /*MaterialTheme {
-                            Surface {
-                                ImageCarousel(images = exposition.imageResource,
-                                    navController = navController
-                                )
-                            }
-                        }*/
-
+                        if (images.isNotEmpty()) {
+                            ImageCarousel(
+                                imageUrls = images.map { it!!.image_min },
+                                navController = navController,
+                                onImageClick = { imageUrl ->
+                                    val paintingId = images.find { it!!.image_min == imageUrl }?.id
+                                    paintingId?.let {
+                                        navController.navigate("${Screens.PaintingDetailScreen.name}/$it")
+                                    }
+                                }
+                            )
+                        } else {
+                            Text(text = "No images available")
+                        }
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        //it.expositionDetails.forEach { detail ->
                         Text(
                             text = it.description,
                             modifier = Modifier.padding(horizontal = 24.dp)
@@ -88,37 +101,3 @@ fun ExpositionLargeDetailScreen(viewModel: ExpositionViewModel , expositionId: I
         }
     )
 }
-/*
-@Preview(showBackground = true)
-@Composable
-fun PreviewExpositionDetailScreen() {
-    MaterialTheme {
-        Surface {
-            //ExpositionLargeDetailScreen(expositionTitle = "CARPINTERO DE NIDOS", navController = rememberNavController())
-            ExpositionLargeDetailScreen(expositionId = 2, navController = rememberNavController())
-
-        }
-    }
-}
-*/
-  /*
-    Log.d("ExpositionLargeDetailScreen", "Fetching details for exposition ID: $expositionId")
-    LaunchedEffect(expositionId) {
-        viewModel.fetchExpositionDetails(expositionId)
-    }
-
-    val exposition by viewModel.selectedExposition.observeAsState()
-
-    exposition?.let {
-        Column(modifier = Modifier.padding(16.dp)) {
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = it.name)
-            //Text(text = "Author: ${it.author}")
-            Text(text = "Description: ${it.description}")
-            Text(text = "Technique: ${it.artist}")
-            Text(text = "Location: ${it.location}")
-            //Text(text = "Space: ${it.space}")
-        }
-    }/
-}*/

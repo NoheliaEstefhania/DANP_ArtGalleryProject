@@ -8,13 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.danp_artgallery.data.model.ExpositionDataProvider
+import com.example.danp_artgallery.data.viewmodel.ExpositionViewModel
 import com.example.danp_artgallery.home.Expositions.ExpositionList
+import com.example.danp_artgallery.home.Expositions.ExpositionListScreen
 import com.example.danp_artgallery.navigation.CustomTopBarHome
 
 @Composable
-fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavController) {
+fun HomeScreen(navigateToExpositionDetail: (Int) -> Unit,navController: NavController) {
     Scaffold(
         topBar = {
             CustomTopBarHome(navController)
@@ -47,11 +50,12 @@ fun HomeScreen(navigateToExpositionDetail: (String) -> Unit,navController: NavCo
                         )
                     }
 
-                    val expositions = ExpositionDataProvider.expositionList
-
-                    ExpositionList(
-                        expositionList = expositions,
-                        navigateToExpositionDetail = navigateToExpositionDetail
+                    // Using the ExpositionViewModel to get the list of expositions
+                    val viewModel: ExpositionViewModel = viewModel()
+                    ExpositionListScreen(
+                        viewModel = viewModel,
+                        navigateToExpositionDetail = { id -> navigateToExpositionDetail(id) },
+                        navController = navController
                     )
                 }
             }
