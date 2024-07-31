@@ -36,7 +36,7 @@ fun PositionTest(trilateration: String, pointXPosition: Double, pointYPosition: 
                 .fillMaxSize()
                 .padding(6.dp)
                 // TODO: Add offset
-                .offset((-45).dp)
+                .offset(-45.dp)
         ) {
             Room(
                 data = points,
