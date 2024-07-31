@@ -26,7 +26,7 @@ import com.example.danp_artgallery.beacon.utils.canvasLibrary.ui.theme.DANP_ArtG
 import com.example.danp_artgallery.navigation.CustomTopBar
 
 
-private const val title = "BEACON"
+private const val title = " "
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
