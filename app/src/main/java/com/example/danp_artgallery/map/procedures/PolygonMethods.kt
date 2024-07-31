@@ -1,6 +1,7 @@
 package com.example.danp_artgallery.map.procedures
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.RectF
 import androidx.compose.foundation.BorderStroke
@@ -220,7 +221,10 @@ fun DrawScope.drawImageAroundRoom(
     context: Context
 ) {
     // Cargar la imagen desde los recursos
-    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.carousel01)
+    val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.carousel02)
+    val imageSizeDp = 100.dp
+    val imageSize = imageSizeDp.value.toInt() // Tamaño de la imagen en píxeles
+    val scaledBitmap = Bitmap.createScaledBitmap(bitmap, imageSize, imageSize, true)
 
     val points = room.points.map { point ->
         Offset(
@@ -229,36 +233,88 @@ fun DrawScope.drawImageAroundRoom(
         )
     }
 
-    val imageSize = Dp(1f).toPx().toInt() // Tamaño de la imagen
+    //val imageSize = 10.dp.toPx().toInt()  // Tamaño de la imagen
 
     // Dibujar la imagen en las cuatro esquinas de la sala
     drawIntoCanvas { canvas ->
         val paint = android.graphics.Paint()
+        val imagesPadding = imageSize/3
+        /*
         canvas.nativeCanvas.drawBitmap(
-            bitmap,
-            points[0].x - imageSize,
-            points[0].y - imageSize,
+            scaledBitmap,
+            points[0].x + imagesPadding,
+            points[0].y + imagesPadding,
             paint
         )
         canvas.nativeCanvas.drawBitmap(
-            bitmap,
-            points[1].x,
-            points[1].y - imageSize,
+            scaledBitmap,
+            points[1].x - (imageSize + imagesPadding),
+            points[1].y + imagesPadding,
             paint
         )
         canvas.nativeCanvas.drawBitmap(
-            bitmap,
-            points[2].x,
-            points[2].y,
+            scaledBitmap,
+            points[2].x - (imageSize + imagesPadding),
+            points[2].y - (imageSize + imagesPadding),
             paint
         )
         canvas.nativeCanvas.drawBitmap(
-            bitmap,
-            points[3].x - imageSize,
-            points[3].y,
+            scaledBitmap,
+            points[3].x + imagesPadding,
+            points[3].y - (imageSize + imagesPadding),
             paint
         )
+        // Centros de los lados
+        val centerTop = Offset((points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2)
+        val centerRight = Offset((points[1].x + points[2].x) / 2, (points[1].y + points[2].y) / 2)
+        val centerBottom = Offset((points[2].x + points[3].x) / 2, (points[2].y + points[3].y) / 2)
+        val centerLeft = Offset((points[3].x + points[0].x) / 2, (points[3].y + points[0].y) / 2)
+
+        canvas.nativeCanvas.drawBitmap(scaledBitmap, centerTop.x - imageSize / 2, centerTop.y + imagesPadding, paint)
+        canvas.nativeCanvas.drawBitmap(scaledBitmap, centerRight.x - (imageSize + imagesPadding), centerRight.y - imageSize / 2, paint)
+        canvas.nativeCanvas.drawBitmap(scaledBitmap, centerBottom.x - imageSize / 2, centerBottom.y - (imagesPadding + imageSize), paint)
+        canvas.nativeCanvas.drawBitmap(scaledBitmap, centerLeft.x + imagesPadding , centerLeft.y - imageSize/2, paint)
+*/
+        // Centros de los lados (espaciados)
+
+        val spaceTopBottom = (points[1].x - points[0].x)/4
+        val spaceLeftRight = ((points[3].y - (imageSize * 2)) - points[0].y)/4
+
+        for (i in 1 until 5) {
+            // Lados superior e inferior
+            val topSideOffset = Offset(points[0].x + i * spaceTopBottom, points[0].y)
+            val bottomSideOffset = Offset(points[3].x + i * spaceTopBottom, points[3].y)
+            canvas.nativeCanvas.drawBitmap(
+                scaledBitmap,
+                topSideOffset.x - (imageSize + imagesPadding),
+                topSideOffset.y + imagesPadding,
+                paint
+            )
+            canvas.nativeCanvas.drawBitmap(
+                scaledBitmap,
+                bottomSideOffset.x - (imageSize + imagesPadding),
+                bottomSideOffset.y - (imagesPadding + imageSize),
+                paint
+            )
+
+            // Lados izquierdo y derecho
+            val leftSideOffset = Offset(points[0].x, points[0].y + i * spaceLeftRight)
+            val rightSideOffset = Offset(points[1].x, points[1].y + i * spaceLeftRight)
+            canvas.nativeCanvas.drawBitmap(
+                scaledBitmap,
+                leftSideOffset.x + imagesPadding,
+                leftSideOffset.y - imageSize,
+                paint
+            )
+            canvas.nativeCanvas.drawBitmap(
+                scaledBitmap,
+                rightSideOffset.x - (imagesPadding + imageSize),
+                rightSideOffset.y - imageSize,
+                paint
+            )
+        }
     }
 }
+
 
 
