@@ -35,9 +35,7 @@ class PermissionsHelper(val context: Context) {
         backgroundAccessRequested: Boolean = false
     ): List<Array<String>> {
         val permissions = ArrayList<Array<String>>()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
-        }
+        permissions.add(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && backgroundAccessRequested) {
             permissions.add(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         }
@@ -53,17 +51,5 @@ class PermissionsHelper(val context: Context) {
             permissions.add(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
         }
         return permissions
-    }
-
-    fun allPermissionsGranted(backgroundAccessRequested: Boolean): Boolean {
-        val permissionsGroups = beaconScanPermissionGroupsNeeded(backgroundAccessRequested)
-        for (permissionsGroup in permissionsGroups) {
-            for (permission in permissionsGroup) {
-                if (!isPermissionGranted(permission)) {
-                    return false
-                }
-            }
-        }
-        return true
     }
 }

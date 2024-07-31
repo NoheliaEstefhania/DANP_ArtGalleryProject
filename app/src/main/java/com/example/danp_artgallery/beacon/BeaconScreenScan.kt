@@ -15,9 +15,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,10 +30,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import com.example.danp_artgallery.beacon.utils.BeaconConfig.Companion.ROOM_HEIGHT
+import com.example.danp_artgallery.beacon.utils.BeaconConfig.Companion.ROOM_LENGTH
+import com.example.danp_artgallery.beacon.utils.BeaconConfig.Companion.allowedUUIDs
+import com.example.danp_artgallery.beacon.utils.BeaconConfig.Companion.positions
+import com.example.danp_artgallery.beacon.utils.BeaconConfig.Companion.trilaterate
 import com.example.danp_artgallery.beacon.utils.BeaconGalleryService
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
+
+@Composable
+fun BeaconList(beacons: List<String>, count: String) {
+    Text(text = count, style = MaterialTheme.typography.bodySmall)
+    LazyColumn {
+        items(beacons) { beaconInfo  ->
+            Text(text = beaconInfo, style = MaterialTheme.typography.bodySmall)
+        }
+    }
+}
 
 @Composable
 fun BeaconScan(
@@ -63,7 +83,12 @@ fun BeaconScan(
                 mutableStateOf("Start Monitoring")
             }
         }
-
+    val showBeacons = remember {
+        mutableStateOf(true)
+    }
+    val trilaterationText = remember { mutableStateOf("-") }
+    val pointXPosition = remember { mutableDoubleStateOf(ROOM_LENGTH - 300) }
+    val pointYPosition = remember{ mutableDoubleStateOf(ROOM_HEIGHT - 300) }
     val beaconsListText = remember { mutableStateOf(emptyList<String>()) }
     val beaconCountText = remember { mutableStateOf("--------") }
     var alertDialog: AlertDialog? = null
@@ -109,6 +134,19 @@ fun BeaconScan(
                     } m"
                 }
             beaconsListText.value = sortedBeacons
+            val beaconsList = beacons.toList()
+            if(
+                beaconsList.find { it.id1.toString() == allowedUUIDs[0] }?.distance != null &&
+                beaconsList.find { it.id1.toString() == allowedUUIDs[1] }?.distance != null &&
+                beaconsList.find { it.id1.toString() == allowedUUIDs[2] }?.distance != null
+            ){
+                val distances = doubleArrayOf(
+                    beaconsList.find { it.id1.toString() == allowedUUIDs[0] }?.distance!!.toDouble(),
+                    beaconsList.find { it.id1.toString() == allowedUUIDs[1] }?.distance!!.toDouble(),
+                    beaconsList.find { it.id1.toString() == allowedUUIDs[2] }?.distance!!.toDouble(),
+                )
+                trilaterate(positions, distances, pointXPosition, pointYPosition, trilaterationText)
+            }
         }
     }
     val region = BeaconGalleryService.region
@@ -169,109 +207,90 @@ fun BeaconScan(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(50.dp))
+        // TODO: Los colores de los botones no aparecen y no se ven
+        Row {
+            Button(
+                onClick = {
+                    monitoringButtonTapped()
+                },
+                enabled = serviceStatus.value
+            ) {
+                Text(monitoringText.value)
+            }
+            Button(
+                onClick = {
+                    rangingButtonTapped()
+                },
+                enabled = serviceStatus.value
+            ) {
+                Text(rangingText.value)
+            }
+        }
+        Row {
+            Button(
+                onClick = {
+                    showBeacons.value = !showBeacons.value
+                },
+            ) {
+                Text(
+                    text = "Test Positioning",
+                )
+            }
+            Button(
+                onClick = {
+                    if (serviceStatus.value) {
+                        // service already running
+                        // stop the service
+                        serviceStatus.value = !serviceStatus.value
+                        buttonValue.value = "Start Service"
+                        val regionViewModel = BeaconManager.getInstanceForApplication(
+                            context
+                        ).getRegionViewModel(region)
+                        regionViewModel.rangedBeacons.removeObservers(lifecycleOwner)
+                        regionViewModel.regionState.removeObservers(lifecycleOwner)
+                        context.stopService(Intent(context, BeaconGalleryService::class.java))
+                        rangingText.value = "Start Ranging"
+                        monitoringText.value = "Start Monitoring"
+                    } else {
+                        // service not running start service.
+                        serviceStatus.value = !serviceStatus.value
+                        buttonValue.value = "Stop Service"
+                        // starting the service
+                        context.startService(Intent(context, BeaconGalleryService::class.java))
+                        val regionViewModel = BeaconManager.getInstanceForApplication(
+                            context
+                        ).getRegionViewModel(region)
+                        rangingText.value = "Stop Ranging"
+                        monitoringText.value = "Stop Monitoring"
+                        // observer will be called each time the monitored regionState changes (inside vs. outside region)
+                        regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
+                        // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
+                        regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
+                    }
+                },
+            ) {
+                Text(
+                    text = buttonValue.value,
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .padding(top = 125.dp),
+                .padding(horizontal = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            Column {
-                BeaconList(beacons = beaconsListText.value)
+            if(showBeacons.value){
+                BeaconList(beacons = beaconsListText.value, count = beaconCountText.value)
                 Spacer(modifier = Modifier.height(16.dp))
-            }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 16.dp) // Puedes ajustar el padding aquí si prefieres que sea menor
-                    .padding(top = 100.dp),  // Mantiene solo el padding superior necesario para evitar solapamiento                contentAlignment = Alignment.Center
-            ) {
-                Row (modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                ){
-                    Button(
-                        onClick = {
-
-                        }
-                    ) {
-                        Text(
-                            text = "Test Positioning",
-                            modifier = Modifier.padding(10.dp),
-                            color = Color.White,
-                        )
-                    }
-                }
-                Row (
-                    modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 60.dp)
-                ){
-                    Button(
-                        onClick = {
-                            monitoringButtonTapped()
-                        },
-                        enabled = serviceStatus.value
-                    ) {
-                        Text(monitoringText.value)
-                    }
-                    Button(
-                        onClick = {
-                            rangingButtonTapped()
-                        },
-                        enabled = serviceStatus.value
-                    ) {
-                        Text(rangingText.value)
-                    }
-                }
-                Row (
-                    modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 115.dp)
-                ){
-                    Button(
-                        onClick = {
-                            if (serviceStatus.value) {
-                                // service already running
-                                // stop the service
-                                serviceStatus.value = !serviceStatus.value
-                                buttonValue.value = "Start Service"
-                                val regionViewModel = BeaconManager.getInstanceForApplication(
-                                    context
-                                ).getRegionViewModel(region)
-                                regionViewModel.rangedBeacons.removeObservers(lifecycleOwner)
-                                regionViewModel.regionState.removeObservers(lifecycleOwner)
-                                context.stopService(Intent(context, BeaconGalleryService::class.java))
-                                rangingText.value = "Start Ranging"
-                                monitoringText.value = "Start Monitoring"
-                            } else {
-                                // service not running start service.
-                                serviceStatus.value = !serviceStatus.value
-                                buttonValue.value = "Stop Service"
-                                // starting the service
-                                context.startService(Intent(context, BeaconGalleryService::class.java))
-                                val regionViewModel = BeaconManager.getInstanceForApplication(
-                                    context
-                                ).getRegionViewModel(region)
-                                rangingText.value = "Stop Ranging"
-                                monitoringText.value = "Stop Monitoring"
-                                // observer will be called each time the monitored regionState changes (inside vs. outside region)
-                                regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
-                                // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
-                                regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
-                            }
-                        }
-                    ) {
-                        Text(
-                            text = buttonValue.value,
-                            modifier = Modifier.padding(10.dp),
-                            color = Color.White,
-                        )
-                    }
-                }
+            } else {
+                PositionTest(
+                    trilateration = trilaterationText.value,
+                    pointXPosition = pointXPosition.doubleValue,
+                    pointYPosition = pointYPosition.doubleValue
+                )
             }
         }
     }
