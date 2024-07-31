@@ -182,19 +182,19 @@ fun promptForPermissions(
     permissionsGroup: Array<String>
 ) {
     if (!allPermissionsGranted(context, permissionsGroup)) {
-        val firstPermission = permissionsGroup.first()
+//        val firstPermission = permissionsGroup.first()
 
-        if (PermissionsHelper(context).isFirstTimeAskingPermission(firstPermission)) {
-            PermissionsHelper(context).setFirstTimeAskingPermission(firstPermission, false)
+//        if (PermissionsHelper(context).isFirstTimeAskingPermission(firstPermission)) {
+//            PermissionsHelper(context).setFirstTimeAskingPermission(firstPermission, false)
             requestPermissionLauncher.launch(permissionsGroup)
-        }
-        else {
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("Can't request permission")
-            builder.setMessage("This permission has been previously denied to this app.  In order to grant it now, you must go to Android Settings to enable this permission.")
-            builder.setPositiveButton("OK", null)
-            builder.show()
-        }
+//        }
+//        else {
+//            val builder = AlertDialog.Builder(context)
+//            builder.setTitle("Can't request permission")
+//            builder.setMessage("This permission has been previously denied to this app.  In order to grant it now, you must go to Android Settings to enable this permission.")
+//            builder.setPositiveButton("OK", null)
+//            builder.show()
+//        }
     }}
 
 fun allPermissionsGranted(context: Context, permissionsGroup: Array<String>): Boolean {
