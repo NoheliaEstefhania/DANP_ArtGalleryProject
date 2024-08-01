@@ -148,8 +148,11 @@ fun DrawRooms(rooms: List<Room>, context: Context, navigateToExpositionDetail: (
                     .fillMaxSize()
                     //.background(Color.Black.copy(alpha = 0.5f))
                     .clickable {
-                        navigateToExpositionDetail(id)
-                    },
+                        val validId = when (id) {
+                            2, 3, 4 -> id
+                            else -> 2
+                        }
+                        navigateToExpositionDetail(validId)                    },
                 contentAlignment = Alignment.Center
             ) {
             }
