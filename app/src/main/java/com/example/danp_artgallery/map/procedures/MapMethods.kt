@@ -53,9 +53,9 @@ fun ShowMap(onMarkerClick: () -> Unit) {
     AndroidView(factory = {
         mapView.apply {
             getMapAsync(OnMapReadyCallback { googleMap ->
-                val galleryPos1 = LatLng(-16.397783710084095, -71.53746375370153)
-                val galleryPos2 = LatLng(-14.397783710084095, -71.53746375370153)
-                val galleryPos3 = LatLng(-16.397783710084095, -70.53746375370153)
+                val galleryPos1 = LatLng(-16.397783710084095, -71.53746375370153) // centro cultural
+                val galleryPos2 = LatLng(-16.39935655143182, -71.53748900470404) // museo santuarios andinos
+                val galleryPos3 = LatLng(-16.395918874118905, -71.53663069785293) //monasterio
 
                 val marker = googleMap.addMarker(
                     MarkerOptions().position(galleryPos1).title("Art Gallery")
