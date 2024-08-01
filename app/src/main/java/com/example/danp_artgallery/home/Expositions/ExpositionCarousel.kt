@@ -75,7 +75,9 @@ fun ImageCarousel(
                         Image(
                             painter = rememberImagePainter(imageUrls[index]),
                             contentDescription = null,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxSize()
+
                         )
                     }
                 }

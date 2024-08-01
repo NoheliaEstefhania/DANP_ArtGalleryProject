@@ -1,5 +1,6 @@
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.danp_artgallery.data.viewmodel.ExpositionViewModel
@@ -56,42 +58,50 @@ fun ExpositionLargeDetailScreen(
             }
         },
         content = { paddingValues ->
-            Box(
+            LazyColumn(
+                contentPadding = PaddingValues(8.dp),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.TopCenter
+                    .padding(paddingValues)
             ) {
-                expositionDetails?.let {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.TopCenter
                     ) {
-
-                        if (images.isNotEmpty()) {
-                            ImageCarousel(
-                                imageUrls = images.map { it!!.image_min },
-                                navController = navController,
-                                onImageClick = { imageUrl ->
-                                    val paintingId = images.find { it!!.image_min == imageUrl }?.id
-                                    paintingId?.let {
-                                        navController.navigate("${Screens.PaintingDetailScreen.name}/$it")
-                                    }
+                        expositionDetails?.let {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                if (images.isNotEmpty()) {
+                                    ImageCarousel(
+                                        imageUrls = images.map { it!!.image_min },
+                                        navController = navController,
+                                        onImageClick = { imageUrl ->
+                                            val paintingId = images.find { it!!.image_min == imageUrl }?.id
+                                            paintingId?.let {
+                                                navController.navigate("${Screens.PaintingDetailScreen.name}/$it")
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    Text(text = "No images available")
                                 }
-                            )
-                        } else {
-                            Text(text = "No images available")
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                Text(
+                                    text = it.description,
+                                    textAlign = TextAlign.Justify,
+                                    modifier = Modifier.padding(
+                                        horizontal = 24.dp
+                                    )
+                                )
+                            }
+                        } ?: run {
+                            Text(text = "Exposition not found")
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = it.description,
-                            modifier = Modifier.padding(horizontal = 24.dp)
-                        )
-
                     }
-                } ?: run {
-                    Text(text = "Exposition not found")
                 }
             }
         }
