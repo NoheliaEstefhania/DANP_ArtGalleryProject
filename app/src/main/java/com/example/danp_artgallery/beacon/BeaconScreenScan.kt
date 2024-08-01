@@ -53,6 +53,7 @@ import org.altbeacon.beacon.Region
 @Composable
 fun BeaconList(beacons: List<String>, count: String) {
     Text(text = count, style = MaterialTheme.typography.bodySmall)
+    Spacer(modifier = Modifier.height(8.dp))
     LazyColumn {
         items(beacons) { beaconInfo  ->
             Text(text = beaconInfo, style = MaterialTheme.typography.bodySmall)
