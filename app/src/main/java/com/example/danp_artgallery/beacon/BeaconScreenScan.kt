@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.LocationManager
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -32,7 +33,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -291,9 +291,10 @@ fun BluetoothButton(
     ){
     val context = LocalContext.current
     var isBluetoothEnabled by remember { mutableStateOf(false) }
+    var isLocationEnabled by remember { mutableStateOf(false) }
 
     // Define the BroadcastReceiver
-    val bluetoothReceiver = remember {
+    val bluetoothLocationReceiver = remember {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
@@ -302,6 +303,13 @@ fun BluetoothButton(
                             intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
                         isBluetoothEnabled = state == BluetoothAdapter.STATE_ON
                     }
+                    LocationManager.PROVIDERS_CHANGED_ACTION -> {
+                        val locationManager =
+                            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                        val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+                        isLocationEnabled = isGpsEnabled || isNetworkEnabled
+                    }
                 }
             }
         }
@@ -309,11 +317,14 @@ fun BluetoothButton(
 
     // Register the BroadcastReceiver
     DisposableEffect(context) {
-        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-        context.registerReceiver(bluetoothReceiver, filter)
+        val filter = IntentFilter().apply {
+            addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+            addAction(LocationManager.PROVIDERS_CHANGED_ACTION)
+        }
+        context.registerReceiver(bluetoothLocationReceiver, filter)
         onDispose {
             try {
-                context.unregisterReceiver(bluetoothReceiver)
+                context.unregisterReceiver(bluetoothLocationReceiver)
             } catch (e: IllegalArgumentException) {
                 // Handle the case where the receiver might not be registered
                 Log.e("ReceiverError", "Receiver not registered or already unregistered.")
@@ -325,38 +336,47 @@ fun BluetoothButton(
     LaunchedEffect(Unit) {
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         isBluetoothEnabled = bluetoothAdapter?.isEnabled == true
+        val locationManager =
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        isLocationEnabled = isGpsEnabled || isNetworkEnabled
     }
     Button(
         onClick = {
             if (isBluetoothEnabled) {
-                if (serviceStatus.value) {
-                    // service already running
-                    // stop the service
-                    serviceStatus.value = !serviceStatus.value
-                    buttonValue.value = "Start Service"
-                    val regionViewModel = BeaconManager.getInstanceForApplication(
-                        context
-                    ).getRegionViewModel(region)
-                    regionViewModel.rangedBeacons.removeObservers(lifecycleOwner)
-                    regionViewModel.regionState.removeObservers(lifecycleOwner)
-                    context.stopService(Intent(context, BeaconGalleryService::class.java))
-                    rangingText.value = "Start Ranging"
-                    monitoringText.value = "Start Monitoring"
+                if(isLocationEnabled) {
+                    if (serviceStatus.value) {
+                        // service already running
+                        // stop the service
+                        serviceStatus.value = !serviceStatus.value
+                        buttonValue.value = "Start Service"
+                        val regionViewModel = BeaconManager.getInstanceForApplication(
+                            context
+                        ).getRegionViewModel(region)
+                        regionViewModel.rangedBeacons.removeObservers(lifecycleOwner)
+                        regionViewModel.regionState.removeObservers(lifecycleOwner)
+                        context.stopService(Intent(context, BeaconGalleryService::class.java))
+                        rangingText.value = "Start Ranging"
+                        monitoringText.value = "Start Monitoring"
+                    } else {
+                        // service not running start service.
+                        serviceStatus.value = !serviceStatus.value
+                        buttonValue.value = "Stop Service"
+                        // starting the service
+                        context.startService(Intent(context, BeaconGalleryService::class.java))
+                        val regionViewModel = BeaconManager.getInstanceForApplication(
+                            context
+                        ).getRegionViewModel(region)
+                        rangingText.value = "Stop Ranging"
+                        monitoringText.value = "Stop Monitoring"
+                        // observer will be called each time the monitored regionState changes (inside vs. outside region)
+                        regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
+                        // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
+                        regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
+                    }
                 } else {
-                    // service not running start service.
-                    serviceStatus.value = !serviceStatus.value
-                    buttonValue.value = "Stop Service"
-                    // starting the service
-                    context.startService(Intent(context, BeaconGalleryService::class.java))
-                    val regionViewModel = BeaconManager.getInstanceForApplication(
-                        context
-                    ).getRegionViewModel(region)
-                    rangingText.value = "Stop Ranging"
-                    monitoringText.value = "Stop Monitoring"
-                    // observer will be called each time the monitored regionState changes (inside vs. outside region)
-                    regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
-                    // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
-                    regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
+                    Toast.makeText(context, "Location is not enabled", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(context, "Bluetooth is not enabled", Toast.LENGTH_SHORT).show()
