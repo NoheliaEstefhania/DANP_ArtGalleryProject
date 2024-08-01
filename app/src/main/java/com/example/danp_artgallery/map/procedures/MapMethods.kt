@@ -57,8 +57,14 @@ fun ShowMap(onMarkerClick: () -> Unit) {
                 val galleryPos2 = LatLng(-16.39935655143182, -71.53748900470404) // museo santuarios andinos
                 val galleryPos3 = LatLng(-16.395918874118905, -71.53663069785293) //monasterio
 
-                val marker = googleMap.addMarker(
-                    MarkerOptions().position(galleryPos1).title("Art Gallery")
+                googleMap.addMarker(
+                    MarkerOptions().position(galleryPos1).title("Art Gallery 1")
+                )
+                googleMap.addMarker(
+                    MarkerOptions().position(galleryPos2).title("Art Gallery 2")
+                )
+                googleMap.addMarker(
+                    MarkerOptions().position(galleryPos3).title("Art Gallery 3")
                 )
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(galleryPos1, 15f))
                 googleMap.setOnMarkerClickListener {
