@@ -31,7 +31,7 @@ import com.example.danp_artgallery.navigation.CustomTopBar
 
 private const val title = "GALLERY MAP"
 @Composable
-fun GalleryMapScreen(context: Context?,navController: NavController){
+fun GalleryMapScreen(context: Context?,navController: NavController, navigateToExpositionDetail: (Int) -> Unit){
     Scaffold(
         topBar = {
             Column(
@@ -68,9 +68,9 @@ fun GalleryMapScreen(context: Context?,navController: NavController){
                     jsonString?.let {
                         // Parsing room data
                         val rooms = parseRoomsFromJSON(it).rooms
-                        DrawRooms(rooms = rooms, context = context)
+                        DrawRooms(rooms = rooms, context = context, navigateToExpositionDetail = { id -> navigateToExpositionDetail(id) })
                     } ?: run {
-                        DrawRooms(rooms = emptyList(), context = context)
+                        DrawRooms(rooms = emptyList(), context = context, navigateToExpositionDetail = { id -> navigateToExpositionDetail(id) })
                     }
                 }
             }
@@ -78,8 +78,10 @@ fun GalleryMapScreen(context: Context?,navController: NavController){
     )
 }
 
+/*
 @Preview
 @Composable
 fun GalleryMapPreview(){
     GalleryMapScreen(null, navController = rememberNavController())
 }
+*/

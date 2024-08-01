@@ -27,31 +27,27 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import com.example.danp_artgallery.map.models.Room
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.danp_artgallery.R
-import androidx.compose.ui.unit.DpSize
-import com.example.danp_artgallery.map.collection.parseRoomsFromJSON
+
 
 
 @Composable
-fun DrawRooms(rooms: List<Room>, context: Context) {
+fun DrawRooms(rooms: List<Room>, context: Context, navigateToExpositionDetail: (Int) -> Unit
+) {
     var selectedRoom by remember { mutableStateOf<Room?>(null) }
     val roomRects = remember { mutableStateListOf<RectF>() }
+    var clickedRoomId by remember { mutableStateOf<Int?>(null) }
 
     DisposableEffect(Unit) {
         onDispose {
             // Reset the selected room when the composable is disposed
             selectedRoom = null
+            clickedRoomId = null
         }
     }
 
@@ -67,10 +63,13 @@ fun DrawRooms(rooms: List<Room>, context: Context) {
                 roomRects.forEachIndexed { index, rect ->
                     if (rect.contains(offset.x, offset.y) && selectedRoom == null) {
                         selectedRoom = rooms[index]
+                        clickedRoomId = rooms[index].id
+                        //navigateToExpositionDetail(rooms[index].id)
                     }
                 }
             }
         }
+        //.clickable { navigateToExpositionDetail(1) }
     ) {
         Canvas(modifier = Modifier.matchParentSize()) {
             // Getting the limits
@@ -140,6 +139,19 @@ fun DrawRooms(rooms: List<Room>, context: Context) {
                     offsetY,
                     context
                 )
+            }
+        }
+        clickedRoomId?.let { id ->
+            // Add a clickable overlay to navigate to the exposition detail
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    //.background(Color.Black.copy(alpha = 0.5f))
+                    .clickable {
+                        navigateToExpositionDetail(id)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
             }
         }
     }
@@ -234,7 +246,7 @@ fun DrawScope.drawImageAroundRoom(
         )
     }
 
-    // Dibujar la imagen en las cuatro esquinas de la sala
+    // Dibujar la imagen al rededor de la galería
     drawIntoCanvas { canvas ->
         val paint = android.graphics.Paint()
         val imagesPadding = imageSize/3

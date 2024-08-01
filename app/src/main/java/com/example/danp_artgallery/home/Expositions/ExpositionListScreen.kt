@@ -23,6 +23,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -96,7 +97,8 @@ fun ExpositionListScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = exposition.description,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Justify
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(

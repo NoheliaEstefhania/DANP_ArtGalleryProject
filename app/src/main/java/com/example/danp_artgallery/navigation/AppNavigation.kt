@@ -91,10 +91,20 @@ fun AppNavigation(context: Context, lifecycleOwner: ComponentActivity) {
                 , navController = navController)
             }
             composable(route = Screens.SearchScreen.name) {
-                SearchScreen(navController = navController)
+                SearchScreen(navController = navController, )
             }
             composable(route = Screens.MapScreen.name) {
-                CityMapScreen(context,navController = navController)
+                CityMapScreen(
+                    context,
+                    navController = navController,
+                    navigateToExpositionDetail = { expositionTitle ->
+                    navController.navigate("${
+                        Screens.ExpositionDetailScreen.name
+                    }" +
+                            "/$expositionTitle"
+                    )
+                    }
+                )
             }
             composable(route = Screens.InfoScreen.name) {
                 InfoScreen(navController = navController)
