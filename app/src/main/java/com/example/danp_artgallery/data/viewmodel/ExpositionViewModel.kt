@@ -33,7 +33,7 @@ class ExpositionViewModel : ViewModel() {
                 val response = RetrofitClient.apiService.getExpositions(1) // Cambia el ID de la galería según corresponda
                 _expositions.value = response
             } catch (e: Exception) {
-                // Manejo de errores
+                Log.e("viewmodel","fallo en la exposicion")
             }
         }
     }
@@ -58,7 +58,7 @@ class ExpositionViewModel : ViewModel() {
             try {
                 _selectedExposition.value = RetrofitClient.apiService.getExpositionDetails(expositionId)
             } catch (e: Exception) {
-                // Handle error
+                Log.e("viewmodel","fallo en el detalle de la exposion")
             }
         }
     }

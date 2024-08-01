@@ -60,9 +60,12 @@ fun PaintingDetailScreen(navController: NavController, viewModel: PaintingViewMo
                         Image(
                             painter = rememberImagePainter(it.image),
                             contentDescription = it.title,
-                            modifier = Modifier.fillMaxWidth().height(300.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+                        AudioPlayerButton(it.audio)
                         Text(text = it.title)
                         //Text(text = "Author: ${it.author}")
                         Text(text = "Description: ${it.description}")
