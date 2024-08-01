@@ -1,5 +1,6 @@
 package com.example.danp_artgallery.beacon.utils
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver
 import com.lemmingapex.trilateration.TrilaterationFunction
@@ -27,6 +28,7 @@ class BeaconConfig {
             pointYPosition: MutableState<Double>,
             trilateration: MutableState<String>
         ) {
+            Log.d("trilaterations","pass")
             val trilaterationFunction = TrilaterationFunction(positions, distance)
             val nolineal = NonLinearLeastSquaresSolver(trilaterationFunction, LevenbergMarquardtOptimizer())
             //trilateracion nolineal
@@ -42,11 +44,8 @@ class BeaconConfig {
 
             //imprimir valores de prueba
             trilateration.value = " trilateracion no lineal " + nolinealSolve.point + "\n" +
-                    "b1 distance: " + distance[0] + "\n" +
-                    "b2 distance: " + distance[1] + "\n" +
-                    "b3 distance: " + distance[2] + "\n" +
-                    "posicionCanvasX: " + pointXPosition.value + "\n" +
-                    "posicionCanvasY: " + pointYPosition.value
+                    "posicionCanvasX: " + "%.${2}f".format(pointXPosition.value).toDouble() + "\n" +
+                    "posicionCanvasY: " + "%.${2}f".format(pointYPosition.value).toDouble()
         }
     }
 }

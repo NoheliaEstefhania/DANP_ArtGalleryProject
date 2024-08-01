@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -52,7 +53,10 @@ import org.altbeacon.beacon.Region
 
 @Composable
 fun BeaconList(beacons: List<String>, count: String) {
-    Text(text = count, style = MaterialTheme.typography.bodySmall)
+    Text(text = count,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier.offset(y = -250.dp)
+    )
     Spacer(modifier = Modifier.height(8.dp))
     LazyColumn {
         items(beacons) { beaconInfo  ->
@@ -145,17 +149,18 @@ fun BeaconScan(
                     } m"
                 }
             beaconsListText.value = sortedBeacons
-            val beaconsList = beacons.toList()
             if(
-                beaconsList.find { it.id1.toString() == allowedUUIDs[0] }?.distance != null &&
-                beaconsList.find { it.id1.toString() == allowedUUIDs[1] }?.distance != null &&
-                beaconsList.find { it.id1.toString() == allowedUUIDs[2] }?.distance != null
+                beacons.find { it.id1.toString().replace("-", "") == allowedUUIDs[0] }?.distance != null &&
+                beacons.find { it.id1.toString().replace("-", "") == allowedUUIDs[1] }?.distance != null &&
+                beacons.find { it.id1.toString().replace("-", "") == allowedUUIDs[2] }?.distance != null
             ){
                 val distances = doubleArrayOf(
-                    beaconsList.find { it.id1.toString() == allowedUUIDs[0] }?.distance!!.toDouble(),
-                    beaconsList.find { it.id1.toString() == allowedUUIDs[1] }?.distance!!.toDouble(),
-                    beaconsList.find { it.id1.toString() == allowedUUIDs[2] }?.distance!!.toDouble(),
+                    beacons.find { it.id1.toString().replace("-", "") == allowedUUIDs[0] }?.distance!!.toDouble(),
+                    beacons.find { it.id1.toString().replace("-", "") == allowedUUIDs[1] }?.distance!!.toDouble(),
+                    beacons.find { it.id1.toString().replace("-", "") == allowedUUIDs[2] }?.distance!!.toDouble(),
                 )
+                Log.d("trilaterations","antes de llamar")
+
                 trilaterate(positions, distances, pointXPosition, pointYPosition, trilaterationText)
             }
         }
