@@ -31,7 +31,7 @@ import com.example.danp_artgallery.navigation.CustomTopBar
 
 private const val title = "SELECT THE ART GALLERY"
 @Composable
-fun CityMapScreen(context: Context?,navController: NavController){
+fun CityMapScreen(context: Context?,navController: NavController, navigateToExpositionDetail: (Int) -> Unit){
 
     var showMap by remember { mutableStateOf(true) }
 
@@ -77,9 +77,9 @@ fun CityMapScreen(context: Context?,navController: NavController){
                         jsonString?.let {
                             // Parsing room data
                             val rooms = parseRoomsFromJSON(it).rooms
-                            DrawRooms(rooms = rooms,context = context )
+                            DrawRooms(rooms = rooms,context = context, navigateToExpositionDetail = { id -> navigateToExpositionDetail(id) } )
                         } ?: run {
-                            DrawRooms(rooms = emptyList(), context = context)
+                            DrawRooms(rooms = emptyList(), context = context, navigateToExpositionDetail = { id -> navigateToExpositionDetail(id) })
                         }
                     }
                 }
@@ -88,8 +88,8 @@ fun CityMapScreen(context: Context?,navController: NavController){
     )
 }
 
-@Preview
-@Composable
-fun CityMapPreview(){
-    CityMapScreen(null, navController = rememberNavController())
-}
+//@Preview
+//@Composable
+//fun CityMapPreview(){
+//    CityMapScreen(null, navController = rememberNavController(),navigateToExpositionDetail = rememberNavController())
+//}

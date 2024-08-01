@@ -53,12 +53,14 @@ fun ShowMap(onMarkerClick: () -> Unit) {
     AndroidView(factory = {
         mapView.apply {
             getMapAsync(OnMapReadyCallback { googleMap ->
-                val galleryPos = LatLng(-16.397783710084095, -71.53746375370153)
-                val marker = googleMap.addMarker(
-                    MarkerOptions().position(galleryPos).title("Art Gallery")
-                )
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(galleryPos, 15f))
+                val galleryPos1 = LatLng(-16.397783710084095, -71.53746375370153)
+                val galleryPos2 = LatLng(-14.397783710084095, -71.53746375370153)
+                val galleryPos3 = LatLng(-16.397783710084095, -70.53746375370153)
 
+                val marker = googleMap.addMarker(
+                    MarkerOptions().position(galleryPos1).title("Art Gallery")
+                )
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(galleryPos1, 15f))
                 googleMap.setOnMarkerClickListener {
                     onMarkerClick()
                     true

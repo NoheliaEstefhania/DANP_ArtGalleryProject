@@ -16,8 +16,11 @@ import androidx.compose.material3.MaterialTheme
 import coil.compose.rememberImagePainter
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import com.example.danp_artgallery.navigation.CustomTopBar
 
@@ -49,29 +52,56 @@ fun PaintingDetailScreen(navController: NavController, viewModel: PaintingViewMo
             }
         },
         content = { paddingValues ->
-            Box(
+            LazyColumn(
+                contentPadding = PaddingValues(8.dp),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
+                    .padding(paddingValues)
             ) {
-                painting?.let {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Image(
-                            painter = rememberImagePainter(it.image),
-                            contentDescription = it.title,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(300.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        AudioPlayerButton(it.audio)
-                        Text(text = it.title)
-                        //Text(text = "Author: ${it.author}")
-                        Text(text = "Description: ${it.description}")
-                        Text(text = "Technique: ${it.technique}")
-                        Text(text = "Location: ${it.location}")
-                        Text(text = "Space: ${it.space}")
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        //contentAlignment = Alignment.Center
+                    ) {
+                        painting?.let {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                //horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Image(
+                                    painter = rememberImagePainter(it.image),
+                                    contentDescription = it.title,
+                                    modifier = Modifier,
+                                        //.fillMaxWidth()
+                                        //.height(300.dp)
+                                        //.width(300.dp),
+                                    contentScale = ContentScale.FillBounds
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(text = it.title,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                )
+                                Text(text = "Description: ${it.description}",
+                                    textAlign = TextAlign.Justify
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(text = "Technique: ${it.technique}",
+
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text(text = "Location: ${it.location}",
+
+                                    )
+                                //Text(text = "Space: ${it.space}")
+                                AudioPlayerButton(it.audio)
+
+                            }
+                        } ?: run {
+                            Text(text = "Painting not found")
+                        }
                     }
                 }
             }
