@@ -96,6 +96,8 @@ fun PaintingDetailScreen(navController: NavController, viewModel: PaintingViewMo
 
                                     )
                                 //Text(text = "Space: ${it.space}")
+                                AudioPlayerButton(it.audio)
+
                             }
                         } ?: run {
                             Text(text = "Painting not found")
