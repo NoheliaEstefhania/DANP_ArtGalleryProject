@@ -1,6 +1,8 @@
 package com.example.danp_artgallery.screens.views
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothHeadset
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
@@ -8,16 +10,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.TextButton
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -31,9 +36,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+
 @Composable
 fun AudioPlayerButton(url:String) {
     val context = LocalContext.current
+    var isBluetoothEnabled by remember { mutableStateOf(false) }
     var isPlaying by remember { mutableStateOf(false) }
     var showAlertDialog by remember { mutableStateOf(false) }
     val mediaPlayer = remember {
@@ -57,29 +65,80 @@ fun AudioPlayerButton(url:String) {
         }
     }
 
-    val headsetReceiver = remember {
+    // Define the BroadcastReceiver
+    val bluetoothReceiver = remember {
         object : BroadcastReceiver() {
-            private var headsetConnected = false
             override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == AudioManager.ACTION_HEADSET_PLUG) {
-                    val state = intent.getIntExtra("state", -1)
-                    if (state == 0) { // Headset disconnected
-                        headsetConnected = false
-                        if (mediaPlayer.isPlaying) {
+                when (intent.action) {
+                    BluetoothAdapter.ACTION_STATE_CHANGED -> {
+                        val state =
+                            intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                        isBluetoothEnabled = state == BluetoothAdapter.STATE_ON
+                        if (state == BluetoothAdapter.STATE_OFF && mediaPlayer.isPlaying) {
                             mediaPlayer.pause()
                             isPlaying = false
-                        }
-                    } else if (state == 1) { // Headset connected
-                        headsetConnected = true
-                        // Optionally resume playback if needed
-                        if (isPlaying) {
-                            mediaPlayer.start()
                         }
                     }
                 }
             }
         }
     }
+
+    val headsetReceiver = remember {
+        object : BroadcastReceiver() {
+            private var headsetConnected = false
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == AudioManager.ACTION_HEADSET_PLUG) {
+                    if (intent.hasExtra("state")) {
+                        if (headsetConnected && intent.getIntExtra("state", 0) == 0) {
+                            headsetConnected = false;
+                            if (mediaPlayer.isPlaying()) {
+                                mediaPlayer.pause()
+                                isPlaying = false
+                            }
+                        } else if (!headsetConnected && intent.getIntExtra("state", 0) == 1) {
+                            headsetConnected = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    val bluetoothHeadsetReceiver = remember {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED) {
+                    val state = intent.getIntExtra(BluetoothHeadset.EXTRA_STATE, BluetoothHeadset.STATE_DISCONNECTED)
+                    if (state == BluetoothHeadset.STATE_DISCONNECTED && mediaPlayer.isPlaying) {
+                        mediaPlayer.pause()
+                        isPlaying = false
+                    }
+                }
+            }
+        }
+    }
+
+    // Register the BroadcastReceiver
+    DisposableEffect(context) {
+        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        context.registerReceiver(bluetoothReceiver, filter)
+        onDispose {
+            try {
+                context.unregisterReceiver(bluetoothReceiver)
+            } catch (e: IllegalArgumentException) {
+                // Handle the case where the receiver might not be registered
+                Log.e("ReceiverError", "Receiver not registered or already unregistered.")
+            }
+        }
+    }
+
+    // Initial check of Bluetooth state
+    LaunchedEffect(Unit) {
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        isBluetoothEnabled = bluetoothAdapter?.isEnabled == true
+    }
+
 
     fun areWiredHeadphonesConnected(): Boolean {
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -94,8 +153,12 @@ fun AudioPlayerButton(url:String) {
                 @SuppressLint("MissingPermission")
                 override fun onServiceConnected(profile: Int, proxy: BluetoothProfile) {
                     if (profile == BluetoothProfile.HEADSET) {
-                        val connectedDevices = (proxy as BluetoothHeadset).connectedDevices
-                        onResult(connectedDevices.isNotEmpty())
+                        try {
+                            val connectedDevices = (proxy as BluetoothHeadset).connectedDevices
+                            onResult(connectedDevices.isNotEmpty())
+                        } catch (e: Exception){
+                            Log.d("meirda","activa bluetoto")
+                        }
                         it.closeProfileProxy(BluetoothProfile.HEADSET, proxy)
                     }
                 }
@@ -115,7 +178,15 @@ fun AudioPlayerButton(url:String) {
         if (areWiredHeadphonesConnected()) {
             onResult(true)
         } else {
-            isBluetoothHeadsetConnected(onResult)
+            if (isBluetoothEnabled) {
+                isBluetoothHeadsetConnected(onResult)
+            } else {
+                onResult(false)
+                Toast.makeText(context,
+                    "Bluetooth is not enabled if you want connect wireless headphones",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
@@ -123,7 +194,7 @@ fun AudioPlayerButton(url:String) {
         AlertDialog(
             onDismissRequest = { showAlertDialog = false },
             title = { Text("Error") },
-            text = { Text("Please connect headphones to play the audio.") },
+            text = { Text("Por favor, conecta unos audífonos para reproducir el audio.") },
             confirmButton = {
                 TextButton(onClick = { showAlertDialog = false }) {
                     Text("OK")
@@ -149,12 +220,9 @@ fun AudioPlayerButton(url:String) {
     ) {
         Text(
             text = if (isPlaying) "Pause" else "Play",
-            fontSize = 18.sp,
-            color = Color.Black
-
+            fontSize = 18.sp
         )
     }
-
     // Manage MediaPlayer state
     LaunchedEffect(isPlaying) {
         try {
@@ -184,6 +252,18 @@ fun AudioPlayerButton(url:String) {
             } catch (e: IllegalArgumentException) {
                 // Handle the case where the receiver might not be registered
                 Log.e("ReceiverError", "Receiver not registered or already unregistered.")
+            }
+        }
+    }
+
+    DisposableEffect(context) {
+        val filter = IntentFilter(BluetoothHeadset.ACTION_CONNECTION_STATE_CHANGED)
+        context.registerReceiver(bluetoothHeadsetReceiver, filter)
+        onDispose {
+            try {
+                context.unregisterReceiver(bluetoothHeadsetReceiver)
+            } catch (e: IllegalArgumentException) {
+                Log.e("ReceiverError", "BluetoothHeadset receiver not registered or already unregistered.")
             }
         }
     }

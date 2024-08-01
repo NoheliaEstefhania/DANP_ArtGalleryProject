@@ -1,10 +1,14 @@
 package com.example.danp_artgallery.beacon
 
 import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -18,16 +22,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
 import com.example.danp_artgallery.beacon.utils.BeaconConfig.Companion.ROOM_HEIGHT
@@ -39,6 +48,7 @@ import com.example.danp_artgallery.beacon.utils.BeaconGalleryService
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.BeaconManager
 import org.altbeacon.beacon.MonitorNotifier
+import org.altbeacon.beacon.Region
 
 @Composable
 fun BeaconList(beacons: List<String>, count: String) {
@@ -208,7 +218,6 @@ fun BeaconScan(
         verticalArrangement = Arrangement.Center,
     ) {
         Spacer(modifier = Modifier.height(50.dp))
-        // TODO: Los colores de los botones no aparecen y no se ven
         Row {
             Button(
                 onClick = {
@@ -237,43 +246,16 @@ fun BeaconScan(
                     text = "Test Positioning",
                 )
             }
-            Button(
-                onClick = {
-                    if (serviceStatus.value) {
-                        // service already running
-                        // stop the service
-                        serviceStatus.value = !serviceStatus.value
-                        buttonValue.value = "Start Service"
-                        val regionViewModel = BeaconManager.getInstanceForApplication(
-                            context
-                        ).getRegionViewModel(region)
-                        regionViewModel.rangedBeacons.removeObservers(lifecycleOwner)
-                        regionViewModel.regionState.removeObservers(lifecycleOwner)
-                        context.stopService(Intent(context, BeaconGalleryService::class.java))
-                        rangingText.value = "Start Ranging"
-                        monitoringText.value = "Start Monitoring"
-                    } else {
-                        // service not running start service.
-                        serviceStatus.value = !serviceStatus.value
-                        buttonValue.value = "Stop Service"
-                        // starting the service
-                        context.startService(Intent(context, BeaconGalleryService::class.java))
-                        val regionViewModel = BeaconManager.getInstanceForApplication(
-                            context
-                        ).getRegionViewModel(region)
-                        rangingText.value = "Stop Ranging"
-                        monitoringText.value = "Stop Monitoring"
-                        // observer will be called each time the monitored regionState changes (inside vs. outside region)
-                        regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
-                        // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
-                        regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
-                    }
-                },
-            ) {
-                Text(
-                    text = buttonValue.value,
-                )
-            }
+            BluetoothButton(
+                serviceStatus,
+                buttonValue,
+                region,
+                lifecycleOwner,
+                rangingText,
+                monitoringText,
+                monitoringObserver,
+                rangingObserver,
+            )
         }
         Spacer(modifier = Modifier.height(10.dp))
         Box(
@@ -293,5 +275,96 @@ fun BeaconScan(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun BluetoothButton(
+    serviceStatus: MutableState<Boolean>,
+    buttonValue: MutableState<String>,
+    region: Region,
+    lifecycleOwner: ComponentActivity,
+    rangingText: MutableState<String>,
+    monitoringText: MutableState<String>,
+    monitoringObserver: Observer<Int>,
+    rangingObserver: Observer<Collection<Beacon>>
+    ){
+    val context = LocalContext.current
+    var isBluetoothEnabled by remember { mutableStateOf(false) }
+
+    // Define the BroadcastReceiver
+    val bluetoothReceiver = remember {
+        object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (intent.action) {
+                    BluetoothAdapter.ACTION_STATE_CHANGED -> {
+                        val state =
+                            intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                        isBluetoothEnabled = state == BluetoothAdapter.STATE_ON
+                    }
+                }
+            }
+        }
+    }
+
+    // Register the BroadcastReceiver
+    DisposableEffect(context) {
+        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        context.registerReceiver(bluetoothReceiver, filter)
+        onDispose {
+            try {
+                context.unregisterReceiver(bluetoothReceiver)
+            } catch (e: IllegalArgumentException) {
+                // Handle the case where the receiver might not be registered
+                Log.e("ReceiverError", "Receiver not registered or already unregistered.")
+            }
+        }
+    }
+
+    // Initial check of Bluetooth state
+    LaunchedEffect(Unit) {
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        isBluetoothEnabled = bluetoothAdapter?.isEnabled == true
+    }
+    Button(
+        onClick = {
+            if (isBluetoothEnabled) {
+                if (serviceStatus.value) {
+                    // service already running
+                    // stop the service
+                    serviceStatus.value = !serviceStatus.value
+                    buttonValue.value = "Start Service"
+                    val regionViewModel = BeaconManager.getInstanceForApplication(
+                        context
+                    ).getRegionViewModel(region)
+                    regionViewModel.rangedBeacons.removeObservers(lifecycleOwner)
+                    regionViewModel.regionState.removeObservers(lifecycleOwner)
+                    context.stopService(Intent(context, BeaconGalleryService::class.java))
+                    rangingText.value = "Start Ranging"
+                    monitoringText.value = "Start Monitoring"
+                } else {
+                    // service not running start service.
+                    serviceStatus.value = !serviceStatus.value
+                    buttonValue.value = "Stop Service"
+                    // starting the service
+                    context.startService(Intent(context, BeaconGalleryService::class.java))
+                    val regionViewModel = BeaconManager.getInstanceForApplication(
+                        context
+                    ).getRegionViewModel(region)
+                    rangingText.value = "Stop Ranging"
+                    monitoringText.value = "Stop Monitoring"
+                    // observer will be called each time the monitored regionState changes (inside vs. outside region)
+                    regionViewModel.regionState.observe(lifecycleOwner, monitoringObserver)
+                    // observer will be called each time a new list of beacons is ranged (typically ~1 second in the foreground)
+                    regionViewModel.rangedBeacons.observe(lifecycleOwner, rangingObserver)
+                }
+            } else {
+                Toast.makeText(context, "Bluetooth is not enabled", Toast.LENGTH_SHORT).show()
+            }
+        },
+    ) {
+        Text(
+            text = buttonValue.value,
+        )
     }
 }
