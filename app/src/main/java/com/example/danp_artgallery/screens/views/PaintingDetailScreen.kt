@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.danp_artgallery.navigation.CustomTopBar
 
 @Composable
@@ -70,13 +71,12 @@ fun PaintingDetailScreen(navController: NavController, viewModel: PaintingViewMo
                                 //horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Image(
-                                    painter = rememberImagePainter(it.image),
+                                    painter = rememberAsyncImagePainter(it.image),
                                     contentDescription = it.title,
-                                    modifier = Modifier,
-                                        //.fillMaxWidth()
-                                        //.height(300.dp)
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(300.dp)
                                         //.width(300.dp),
-                                    contentScale = ContentScale.FillBounds
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Text(text = it.title,
@@ -92,9 +92,9 @@ fun PaintingDetailScreen(navController: NavController, viewModel: PaintingViewMo
 
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Text(text = "Location: ${it.location}",
-
-                                    )
+//                                Text(text = "Location: ${it.location}",
+//
+//                                    )
                                 //Text(text = "Space: ${it.space}")
                                 AudioPlayerButton(it.audio)
 
